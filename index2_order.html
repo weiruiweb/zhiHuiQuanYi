@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Expires" CONTENT="0">
+<title>订单管理</title>
+<script src="js/jquery1.8.3.js"></script>
+<script src="js/rem.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script src="js/browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/base.js" type="application/javascript"></script>
+</head>
+
+<body>
+<div id="app">
+	<div class="maincontent" >
+		<div class="main_box">
+			<div class="tabs font30 flexRowBetween">
+			    <div class="tab_items" :class="(is_show == 0?'tabs_this':'')" :data-current="0" @click="change">
+			        出售商品
+			    </div>
+			    <div class="tab_items" :class="(is_show == 1?'tabs_this':'')" :data-current="1"  @click="change">
+			        买入商品
+			    </div>
+			</div>
+			<div class="tab font30 flexRowBetween">
+			    <div class="tab_item" :class="(currentId == 0?'tab_this':'')" :data-id="0" @click="tab">
+			        全部订单
+			    </div>
+			    <div class="tab_item" :class="(currentId == 1?'tab_this':'')" :data-id="1"  @click="tab">
+			        待审核
+			    </div>
+			    <div class="tab_item" :class="(currentId == 2?'tab_this':'')" :data-id="2"  @click="tab">
+			        已售出
+			    </div>
+			</div>
+			<div class="product flexRowBetween w710">
+			    <div class="product_box flexRowBetween">
+			        <div class="product_left1">
+			            <img src="images/product.png">
+			        </div>
+			        <div class="product_right1 flexRowBetween">
+			            <div class="product_detail">
+			                <div class="font32 color3 product_top">空间+导示</div>
+			                <div class="font28 color6 product_top">出售:8989</div>
+			                <div class="font32 color6 flexRowBetween  product_top">
+			                    <div class="product_name">¥898</div>
+			                    <div class="font24 color submit_info buy_now handle">立即购买</div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+			
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						paginate: {
+							
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+
+						searchItem:{
+							
+						},
+						pageArray:[],
+						allPages:0,
+						linkPage:'',
+						currentId:'',
+						is_show:'',
+					}
+
+				},
+				
+				created: function () {
+	
+				},
+
+				methods:{
+					change(e){
+						var self = this;
+                		self.is_show = window.base.getDataSet(e).current;
+                		console.log(is_show);
+					},
+					tab(e){
+						var self = this;
+                		self.currentId = window.base.getDataSet(e).id;
+                		console.log(currentId);
+					}
+				}
+			});
+			
+		</script>
+</body>
+</html>
