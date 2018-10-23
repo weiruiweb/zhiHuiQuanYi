@@ -106,7 +106,7 @@
 			getMainData(){
 			    const self = this;
 			    const postData = {
-			    	token:"d3a85c820d3eeeb7eb2d0530a60c2e36",
+			    	token:localStorage.getItem('user_token'),
 			    };
 			    postData.searchItem = {
 			      thirdapp_id:2,

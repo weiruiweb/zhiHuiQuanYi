@@ -25,6 +25,56 @@ window.base={
         });
     },
 
+    getUserToken:function(callback){
+
+
+        var param = this.GetRequest();
+        console.log(param);
+        if(param.code){
+            var postData = {
+                thirdapp_id:2,
+                code:param.code,
+            };
+            var c_callback = (res)=>{
+                console.log(res)
+                if(res.token){
+                    localStorage.setItem('user_token',res.token);
+                    localStorage.setItem('user_no',res.info.user_no);
+                    localStorage.setItem('user_info',res.info);
+                    callback&&callback();
+                }else{
+                    alert('获取token失败')
+                };
+            };  
+            this.getWxauthToken(postData,c_callback);
+        }else if(localStorage.getItem('user_token')){
+            callback&&callback();
+        }else{
+            var href =  window.location.href;
+            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7cd6c5fcb1acb373&redirect_uri='+
+            encodeURIComponent(href)+'&response_type=code&scope=snsapi_userinfo';
+        };
+        
+    }, 
+
+    getSelectValue:function(e) {   
+        return e.target.selectedOptions[0].text;
+    },  
+
+    getWxauthToken:function(param,callback) {
+  
+        var allParams = {
+            url:'Wxauth',
+            type:'post',
+            data:param,
+            sCallback: function(data){
+                callback&&callback(data);
+            }
+        };
+        this.getData(allParams);
+        
+    },
+
     articleList:function(param,callback) {
   
         var allParams = {
@@ -37,6 +87,69 @@ window.base={
         };
         this.getData(allParams)
     },
+
+    userGet:function(param,callback) {
+
+        var allParams = {
+            url:'Base/User/get',
+            type:'post',
+            data:param,
+            sCallback: function(data){
+                callback&&callback(data);
+            }
+        };
+        this.getData(allParams)
+    }, 
+
+    pay(param,callback){
+        var allParams ={
+            url:'Base/Pay/pay',
+            type:'post',
+            data:param,
+            sCallback: function(data) {
+                callback && callback(data);
+            }
+        };
+        this.getData(allParams);
+    },
+
+    userInfoUpdate:function(param,callback) {
+  
+        var allParams = {
+            url:'Common/UserInfo/update',
+            type:'post',
+            data:param,
+            sCallback: function(data){
+                callback&&callback(data);
+            }
+        };
+        this.getData(allParams)
+    },   
+
+
+    orderGet:function(param,callback){
+        var allParams ={
+            url:'Common/Order/get',
+            type:'post',
+            data:param,
+            sCallback: function(data) {
+                callback && callback(data);
+            }
+        };
+        this.getData(allParams);
+    },
+
+    addOrder(param,callback){
+        var allParams ={
+            url:'Func/Order/addOrder',
+            type:'post',
+            data:param,
+            sCallback: function(data) {
+                callback && callback(data);
+            }
+        };
+        this.getData(allParams);       
+    } ,
 
     upLoadImg:function(param,callback) {
     

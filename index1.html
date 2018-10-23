@@ -28,7 +28,7 @@
 						<div class="help_right color1">
 							<h3 class="help_tlt font30">{{item.title}}</h3>
 							<p class="help_detail flex avoidOverflow">{{item.description}}</p>
-							<a href="index1_detail.html">立即进入</a>
+							<a :data-path="item.url" @click="intoDetail">立即进入</a>
 						</div>
 					</div>
 				</div>
@@ -97,45 +97,46 @@
 				},
 
 				methods:{
+
 					getLabelData() {
                         var self = this;
                         var postData = window.base.cloneForm(self.paginate);
                         postData.searchItem = {
-                            type:1
+                            thirdapp_id:2
                         };
+                        postData.getBefore = {
+					      label:{
+					        tableName:'label',
+					        searchItem:{
+					          title:['=',['帮助中心']], 
+					        },
+					        middleKey:'parentid',
+					        key:'id',
+					        condition:'in',
+					      },
+					    };
+					    postData.order = {
+					    	create_time:'normal'
+					    }
                         var callback = (res)=>{
-                            self.labelData = res.info.data;
-                            self.aboutMenu = window.base.findKeyFromArray(self.labelData,'title','帮助中心')[0]; 
-                            console.log(100,self.aboutMenu)
-                            var length= self.aboutMenu['child'].length;
-                            self.menu_array = [];
-                            for(var i=0;i< length;i++){  
-                                self.menu_array.push(self.aboutMenu['child'][i].id)
-                            };
-                            console.log(100,self.menu_array)
-                            self.getArticleData();
-                            console.log(11,self.menu_array);     
+                           if(res.info.data.length>0){
+					          self.mainData.push.apply(self.mainData,res.info.data);
+					        }else{
+					        
+					          alert('没有更多了');
+					        }
+
                         };
                         window.base.labelGet(postData,callback);
                     },  
-                    getArticleData() {
-                        var self = this;
-                        var postData = window.base.cloneForm(self.paginate);
-                        postData.searchItem = window.base.cloneForm(self.searchItem);
-                        postData.searchItem.menu_id = ['in',self.menu_array];
-                        var callback = (res)=>{
-                            self.mainData = res.info.data;
-                            console.log(111,self.mainData);
-                        };
-                        
-                        window.base.articleList(postData,callback);
-                    }, 
-					
-				// intoDetail(e) {
-	   //              var self = this;
-	   //              var data_ulr = window.base.getDataSet(e).path;
-	   //              window.location.href = "data_ulr";
-		  //          },
+
+
+                
+				intoDetail(e) {
+	                var self = this;
+	                var data_url = window.base.getDataSet(e).path;
+	                window.location.href = data_url;
+		           },
 				}
 			});
 			

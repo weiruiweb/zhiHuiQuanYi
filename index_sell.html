@@ -27,8 +27,8 @@
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">选择产品类型</div>
 			            <div class="product_right color6">
-			            	<select placeholder="商品类型" v-model="productData.type">
-			            		<option v-for="item in labelData">{{item.title}}</option>			
+			            	<select placeholder="商品类型" @change="selectChange"  id="productType">
+			            		<option v-for="item in labelData" :id="item.id">{{item.title}}</option>			
 			            	</select>
 			            </div>
 			        </div>
@@ -47,13 +47,13 @@
 			        <div class="infor_list font28 flex" style="border:none;">
 			            <div class="product_left color3">市场价格</div>
 			            <div class="product_right color6">
-			            	<input placeholder="请输入市场价格" v-model="productData.price"/>
+			            	<input placeholder="请输入市场价格" v-model="productData.origin_price"/>
 			            </div>
 			        </div>
 			        <div class="infor_list font28 flex" style="border:none;">
 			            <div class="product_left color3">出售价格</div>
 			            <div class="product_right color6">
-			            	<input placeholder="请输入出售价格" v-model="productData.margket_price"/>
+			            	<input placeholder="请输入出售价格" v-model="productData.price"/>
 			            </div>
 			        </div>
 			    </div>
@@ -103,15 +103,16 @@
 		data: function() {
 			return {
 				productData:{
-					type:'',
+			
 					product_source:'',
 					title:'',
 					price:'',
-					market_price:'',
+					origin_price:'',
 					exchange_code:'',
 					mainImg:[],
 					valid_time:'',
-					category_id:41
+					category_id:'',
+					status:0
 				},
 				labelData:[],
 			}
@@ -123,16 +124,12 @@
 		},
 
 		methods:{
-			cancel(){
-				var self = this;
-				delete self.productData.mainImg;
-				delete self.productData.exchange_code;
-				delete self.productData.valid_time;
-			},
+			
+			
 			getLabelData(){
 				var self = this;
 				var postData = {
-					token:'96cf6427db721df57d6c51acbc5d3b84'
+					token:localStorage.getItem('user_token'),
 				};
 				postData.searchItem = {
 					type: ["in", [3]]
@@ -142,10 +139,11 @@
 			    };
 			    window.base.labelGet(postData,callback);
 			},
+
 			productAdd() {
 				var self = this;
 				var postData = {
-					token:'96cf6427db721df57d6c51acbc5d3b84',
+					token:localStorage.getItem('user_token'),
 					data:self.productData,
 			    };
 				var callback = (res)=>{
@@ -166,7 +164,7 @@
 				var param = new FormData();
 				param.append('file',file,file.name);
 				param.append('thirdapp_id',2);
-				param.append('token','96cf6427db721df57d6c51acbc5d3b84');
+				param.append('token',localStorage.getItem('user_token'));
 				console.log(param.get('file'))
 				var callback = function (res) {
 					if(res.solely_code==100000&&res.info&&res.info.url){ 
@@ -175,11 +173,22 @@
 				};
 				var res = window.base.upLoadImg(param,callback);
 			},
+
+			selectChange(e){ 
+              const self = this;
+              self.productData.category_id = $(":selected","#productType").attr("id");
+            
+              console.log('selectChange',self.productData);
+            },
+
 			submit(){
-			    const self = this;
-				self.productAdd();
-				  
-		  	},
+                const self = this;	
+                if(window.base.checkComplete(self.productData)){
+                    self.productAdd()
+                }else{
+                    alert('请补全信息')
+                }
+            },  
 		}
 	});
 	

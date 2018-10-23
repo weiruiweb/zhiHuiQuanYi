@@ -25,7 +25,7 @@
 			<div class="infor_cont">
 				<div class="infor_top flex">
 					<div class="infor_left font32 color3 avoidOverflow">{{mainData.title}}</div>
-					<div class="infor_right font30" style="text-decoration: line-through ">市场价:¥{{mainData.margket_price}}</div>
+					<div class="infor_right font30" style="text-decoration: line-through ">市场价:¥{{mainData.origin_price}}</div>
 				</div>
 				<div class="infor_top  flex">
 					<div class="infor_left font32 color6">{{mainData.type}}</div>
@@ -36,11 +36,11 @@
 		<div class="product_tlt1 w710 flex">
 			<div class="tlt_left1 flexCenter">
 				<img src="images/detail_icon1.png">
-				<span class="font28 color6">商品数量:157</span>
+				<span class="font28 color6">商品数量:{{mainData.stock}}</span>
 			</div>
 			<div class="tlt_left1 flexCenter" style="border-left: solid 1px #e0e0e0;">
 				<img src="images/detail_icon2.png">
-				<span  class="font28 color6">成交单数:157</span>
+				<span  class="font28 color6">成交单数:{{mainData.success_number}}</span>
 			</div>
 		</div>
 		<div class="big_title flexRowBetween">
@@ -48,21 +48,9 @@
 		    <div class="tlt_center font32 color6">商品介绍</div>
 		    <div class="tlt_left"></div>
 		</div>
-		<div class="prodouct_show w710 flex">
-			<div class="show_left">
-				<img :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''">
-			</div>
-			<div class="show_right font30 color6">
-				商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍
-			</div>
-		</div>
-		<div id="note" class="w710">
-			<p class="p1">温馨提示</p>
-			<p class="p2 font28 color6">温馨提示温馨提示温馨提示温馨提示温馨提示温馨提示</p>
-		</div>
-		<div id="note" class="w710">
-			<p class="p1">使用说明</p>
-			<p class="p2 font28 color6">使用说明使用说明使用说明使用说明使用说明使用说明</p>
+	
+		<div id="note" class="w710" class="content ql-editor">
+	            <div v-html="mainData.content"></div> 
 		</div>
 		<div id="note" class="w710">
 			<p class="p1">通用门店</p>
@@ -76,11 +64,11 @@
 		<div style="width: 100%;height:1.2rem;"></div>
 		<div class="buy w710 flex">
 			<div class="buy_left flex">
-				<div class="buy_add">+</div>
-				<div class="buy_number">56</div>
-				<div class="buy_add">-</div>
+				<div class="buy_add"  data-type="-" @click="counter" :data-id="mainData.id">-</div>
+				<input type="number"  :value="count" style="width:40px;text-align:center" />
+				<div class="buy_add"   data-type="+" @click="counter" :data-id="mainData.id">+</div>
 			</div>
-			<div class="buy_right"><button class="submit_info">立即购买</button></div>
+			<div class="buy_right"><button class="submit_info" @click="addOrder">立即购买</button></div>
 		</div>
 	</div>
 </div>
@@ -93,6 +81,9 @@
 					return {
 						mainData:[],
 						labelData:[],
+						order_id:'',
+						totalPrice:'',
+						count:1,
 					}
 
 				},
@@ -102,6 +93,17 @@
 				},
 
 				methods:{
+
+					  counter(e){
+					    const self = this;
+					    console.log(window.base.getDataSet(e,'type').type)
+					    if(window.base.getDataSet(e,'type').type=='+'){
+					      self.count++;
+					    }else if(self.count > '1'){
+					      self.count--;
+					    }
+					    self.countTotalPrice();
+					  },
 
 					getMainData() {
 						var self = this;
@@ -115,7 +117,71 @@
 						window.base.productGet(postData,callback);
 					},	
 
-				}
+
+					  addOrder(){
+					    const self = this;
+					 	if(!self.order_id){
+					      const postData = {
+					        token:localStorage.getItem('user_token'),
+					        product:[
+					          {id:window.base.GetRequest().id,count:self.count}
+					        ],
+					        pay:{balance:self.totalPrice.toFixed(2)},
+					        type:1
+					      };
+					      const callback = (res)=>{
+					        self.order_id = res.info.id;
+					        self.pay(self.order_id);     
+					      };
+					      window.base.addOrder(postData,callback);
+					    }else{
+					      self.pay(self.order_id)
+					    }   
+					  },
+
+
+
+  
+
+					  pay(order_id){
+					    const self = this;
+					    const postData = {
+					      token:localStorage.getItem('user_token'),
+					      searchItem:{
+					        id:order_id,
+					      },
+					      balance:self.totalPrice.toFixed(2),
+					      wxPayStatus:0
+					    };
+					    
+					    const callback = (res)=>{
+					      
+					      if(res.solely_code==100000){
+					        alert('ok')
+					         
+					       
+					      }else{
+					        alert(res.msg)
+					      };
+					    };
+					    window.base.pay(postData,callback);
+					  },
+
+
+					
+
+
+					  countTotalPrice(){  
+					    const self = this;
+					    var totalPrice = 0;
+					    totalPrice += self.count*parseFloat(self.mainData.price);
+					    self.totalPrice = totalPrice;
+					    console.log(self.totalPric)
+					  },
+
+				},
+
+
 			});
 			
 		</script>

@@ -133,136 +133,13 @@
 				
 				created: function () {
 
-					this.getBannerData();
-				    this.getartData()
+					
 				},
 
 				methods:{
 
-					getBannerData() {
-						var self = this;
-						var ua = navigator.userAgent.toLowerCase();
-   						
-					    self.isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
-
-						var postData = {
-						    count: 0,
-						    currentPage: 1,
-						    is_page: true,
-						    pagesize:1,
-						    searchItem:{
-								thirdapp_id:12,
-								title:'轮播图'
-							}
-					    };
-
-						var callback = (res)=>{
-							self.bannerData = res.info.data[0]['mainImg'];
-						};
-						window.base.labelGet(postData,callback);
-					},		
-
-
-
-					messageAdd() {
-						var self = this;
-						var postData = {
-							data:{
-								title:self.submitData.title,
-								phone:self.submitData.phone,
-								content:self.submitData.content,	
-								mainImg:self.submitData.mainImg,
-								user_type:0,
-								thirdapp_id:12,	
-							}
-					    };
-						var callback = (res)=>{
-							if(res.solely_code==100000){
-						
-								alert('提交成功');
-								window.location.reload()
-							}else{
-								alert('网络故障')
-							}
-						};
-						window.base.messageAdd(postData,callback);
-					},
-
-
-					getartData(){
-					    const self = this;
-					    const postData = {};
-					    postData.searchItem = {
-					      thirdapp_id:12
-					    };
-					    postData.getBefore = {
-					      article:{
-					        tableName:'label',
-					        searchItem:{
-					          title:['=',['注意事项']],
-					        },
-					        middleKey:'menu_id',
-					        key:'id',
-					        condition:'in',
-					      },
-					    };
-					    const callback = (res)=>{
-					      if(res.info.data.length>0){
-					        self.artData = res.info.data;
-					      };
-					      console.log(self.artData);
-					   
-					    };
-					    window.base.articleGet(postData,callback);
-					},
-
-					upload(e){
-						var self = this;
-						var file = e.target.files[0];
-						console.log(file)
-						var param = new FormData();
-						param.append('file',file,file.name);
-						param.append('thirdapp_id',12);
-						console.log(param.get('file'))
-						
-						var callback = function (res) {
-							if(res.solely_code==100000&&res.info&&res.info.url){ 
-	              				self.submitData.mainImg.push({url:res.info.url})
-	              			}
-						};
-						
-						var res = window.base.upLoadImg(param,callback);
-						
-					},
-
-
-					ifAnonymous(){
-						var self = this;
-						console.log(666)
-						self.isAnonymous = !self.isAnonymous
-						console.log(self.isAnonymous)
-					},
-
-					submit(){
-						var self = this;
-						
-						var newObject = window.base.cloneForm(self.submitData);
-
-						delete newObject.mainImg;
-						if(self.isAnonymous){
-							delete newObject.phone;
-							delete newObject.title;
-						};
-						const pass = window.base.checkComplete(newObject);
-						if(pass){
-							self.messageAdd()
-						}else{
-							alert('请补全信息')
-						};	
-						
 					
-						
-					},
+					
 
 
 

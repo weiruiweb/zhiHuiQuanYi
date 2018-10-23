@@ -58,7 +58,7 @@
 			messageAdd() {
 				var self = this;
 				var postData = {
-					token:'0fcbded4e1d7affbd77a8c227cd43b45',
+					token:localStorage.getItem('user_token'),
 					data:{
 						title:self.submitData.name,
 						phone:self.submitData.phone,
@@ -77,17 +77,15 @@
 				};
 				window.base.messageAdd(postData,callback);
 			},
+
+
 			submit(){
 			    const self = this;
 			    var name  = self.submitData.name;
 			    var phone = self.submitData.phone;
-			    var newObject = window.base.cloneForm(self.submitData);
+			
 
-			    delete newObject.name;
-			    delete newObject.phone;
-			    delete newObject.content;
-
-			    const pass = window.base.checkComplete(newObject);
+			    const pass = window.base.checkComplete(self.submitData);
 			    if(pass){
 			      if(!name ||!/^[\u4E00-\u9FA5]+$/.test(name)){
 			      	alert('姓名格式错误')

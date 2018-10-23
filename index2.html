@@ -21,8 +21,10 @@
 		<div class="main_box">
 			<div class="user_top">
 				<div class="user_img flex">
-					<div class="user_photo"></div>
-					<div class="user_name font32 color1">米桃子</div>
+					
+						<img  class="user_photo" :src="userData.headImgUrl" />
+				
+					<div class="user_name font32 color1">{{userData.nickname}}</div>
 				</div>
 				<div class="member flexRowBetween font28 color1">
 					<div class="member_left">会员:普通会员</div>
@@ -104,22 +106,31 @@
 			var app = new Vue({
 				el: '#app',
 				data: function() {
+
 					return {
+
+						userData:[],
 						mainData:[],
 					}
 
 				},
 				
 				created: function () {
-				    this.getMainData()
-				},
+				    var callback = (res)=>{
+		              this.getMainData();
+		              this.userGet();
+			        };
+			        window.base.getUserToken(callback);				
+			    },
 
 				methods:{
+
+
 					getMainData(){
 					    const self = this;
 					    const postData = {
-					    	token:'550b3d5d69c935cacca5dbacd476b20c',
-					    	user_no:'UA17859562793735',
+					    	token:localStorage.getItem('user_token'),
+					    	user_no:localStorage.getItem('user_no'),
 					    };
 					    postData.searchItem = {
 					      thirdapp_id:2
@@ -133,6 +144,23 @@
 					    };
 					    window.base.articleGet(postData,callback);
 					},
+
+					userGet(){
+		                const self = this;
+		                const postData = {
+		                    token:localStorage.getItem('user_token'),
+		                    thirdapp_id:2
+		                };
+		                const callback = (res)=>{
+		                    if(res.info.data.length>0){
+		                        self.userData = res.info.data[0]
+		                    }else{
+		                        alert('数据错误')
+		                    }
+		                    console.log(self.userData)
+		                }
+		                window.base.userGet(postData,callback);
+		            },  
 				}
 			});
 			
