@@ -13,6 +13,12 @@ input{ outline:none;}
 
 
 /*主体*/
+.carousel-indicators li{
+    margin:0 0.1rem;
+}
+.carousel-indicators .active{
+    margin:0 0.1rem;
+}
 .maincontent{
     width:7.5rem;
     min-height: 100%;

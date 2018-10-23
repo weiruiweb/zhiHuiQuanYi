@@ -7,10 +7,12 @@
 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <title>首页</title>
-<script src="js/jquery1.8.3.js"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<script src="js/jquery-2.1.4.min.js"></script>
 <script src="js/rem.js"></script>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <script src="js/browser.min.js"></script>
+<script src="js/bootstrap.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="js/base.js" type="application/javascript"></script>
 
@@ -18,29 +20,23 @@
 
 <body>
 <div id="app">
-
-	
 	<div class="maincontent" >
 		<div class="main_box">
-			<div class="product_infor w710">
-			    <div class="product_tlt flex">
-			        <div class="tlt_cont font32 color3">产品信息</div>
-			    </div>
-			    <div class="product_input">
-			        <div class="infor_list font28 flex">
-			            <div class="product_left color3">选择产品类型</div>
-			            <div class="product_right color6">优惠券</div>
-			        </div>
-			        <div class="infor_list font28 flex">
-			            <div class="product_left color3">产品来源</div>
-			            <div class="product_right color6">产品来源</div>
-			        </div>
-			        <div class="infor_list font28 flex" style="border:none;">
-			            <div class="product_left color3">产品名称</div>
-			            <div class="product_right color6">爱奇艺</div>
+				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" v-if="bannerData&&bannerData.mainImg">
+			    <ol class="carousel-indicators">
+			        <li v-for="(item, index) in bannerData.mainImg" data-target="#carousel-example-generic" :data-slide-to="index" :class="index=='0'?'active':''"></li>
+			    </ol>
+			    <div class="carousel-inner" role="listbox">
+			        <div v-for="(item, index) in bannerData.mainImg" class="item" :class="index=='0'?'active':''" >
+			          <img :src="item.url" alt="..." class="img-responsive">
 			        </div>
 			    </div>
-			</div>
+			    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+			      
+			    </a>
+			    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+			    </a>
+			</div> 
 		</div>
 		<div class="index1">
 		    <img src="images/index1.png">
@@ -135,16 +131,31 @@
 				},
 				
 				created: function () {
-
+					this.getBannerData();
 					
 				},
 
 				methods:{
+					getBannerData() {
+                        var self = this;
+                        
+                        var postData = {
+                            count: 0,
+                            currentPage: 1,
+                            pagesize:6,
+                            is_page:true,
+                            searchItem:{
+                                thirdapp_id:2,
+                                menu_id:46
+                            }
+                        };
 
-					
-					
-
-
+                        var callback = (res)=>{
+                            self.bannerData = res.info.data[0];
+                            console.log(self.bannerData)
+                        };
+                        window.base.articleGet(postData,callback);
+                    },
 
 				}
 			});
