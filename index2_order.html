@@ -32,10 +32,16 @@
 			        全部订单
 			    </div>
 			    <div class="tab_item" :class="(currentId == 1?'tab_this':'')" :data-id="1"  @click="tab">
-			        待审核
+			        待支付
 			    </div>
 			    <div class="tab_item" :class="(currentId == 2?'tab_this':'')" :data-id="2"  @click="tab">
-			        已售出
+			        待使用
+			    </div>
+			    <div class="tab_item" :class="(currentId == 3?'tab_this':'')" :data-id="3"  @click="tab">
+			        已完成
+			    </div>
+			    <div class="tab_item" :class="(currentId == 4?'tab_this':'')" :data-id="4"  @click="tab">
+			        纠纷中
 			    </div>
 			</div>
 			<div class="product flexRowBetween w710">

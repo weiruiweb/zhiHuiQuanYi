@@ -1,5 +1,5 @@
 window.base={
-    g_restUrl:'http://fuxian.yisuiyanghuoguo.com/api/fuxian/public/index.php/api/v1/',
+    g_restUrl:'http://solelytech.iicp.net/zhqy/public/index.php/api/v1/',
 
     getData:function(params){
         if(!params.type){
@@ -46,7 +46,7 @@ window.base={
                                 // 这个不关会扔一个默认值 application/x-www-form-urlencoded 过去，后端拿不到数据的！
                                 // 而且你甚至不能传个字符串 'multipart/form-data'，后端一样拿不到数据！
             processData: false, // 关关关！重点
-            url: 'http://fuxian.yisuiyanghuoguo.com/api/fuxian/public/index.php/api/v1/Base/FtpImage/uploadExcluedeToken',
+            url: 'http://solelytech.iicp.net/zhqy/public/index.php/api/v1/Base/FtpImage/upload',
             data: param,
             success:function(res){
                 callback && callback(res);
@@ -84,7 +84,28 @@ window.base={
         };
         this.getData(allParams)
     },
-
+    productAdd:function(param,callback) {
+        var allParams = {
+            url:'Common/Product/add',
+            type:'post',
+            data:param,
+            sCallback: function(data){
+                callback&&callback(data);
+            }
+        };
+        this.getData(allParams)
+    },
+    productGet:function(param,callback) {
+            var allParams = {
+                url:'Common/Product/get',
+                type:'post',
+                data:param,
+                sCallback: function(data){
+                    callback&&callback(data);
+                }
+            };
+            this.getData(allParams)
+        },
     articleGet:function(param,callback) {
   
         var allParams = {
@@ -97,13 +118,10 @@ window.base={
         };
         this.getData(allParams)
     },
-
-
-
-    messages:function(param,callback) {
+    accountGet:function(param,callback) {
   
         var allParams = {
-            url:'UserMessage/addMessage',
+            url:'Common/FlowLog/get',
             type:'post',
             data:param,
             sCallback: function(data){
@@ -112,7 +130,7 @@ window.base={
         };
         this.getData(allParams)
     },
-
+    
     checkComplete:function(obj){
         var pass = true;
         for(var key in obj){
@@ -123,9 +141,6 @@ window.base={
         return pass;
         console.log(pass);
     },
-
-    
-
     articleOne:function(param,callback) {
         var allParams = {
             url:'UserArticle/GetInfo',
@@ -206,8 +221,6 @@ window.base={
     getDataSet:function(e) {   
         return e.target.dataset; 
     },
-
-
     getDataset:function(ele){
         if(ele.dataset){
             return ele.dataset;
@@ -231,9 +244,6 @@ window.base={
             return dataset;
         }
     },
-
-
-
     findKeyFromArray:function(Array,key,value) {  
         var new_array = []; 
         for (var i = 0; i < Array.length; i++) {
@@ -269,8 +279,6 @@ window.base={
         }
          return vars;
     }, 
-
-
     computePageArr:function(self) {   
         self.allPages = Math.ceil(self.paginate['count']/self.paginate['pagesize']);
         console.log(self.allPages);
@@ -327,9 +335,6 @@ window.base={
         }
          
     },
-
-
-
 }
 
 // console.log(this);

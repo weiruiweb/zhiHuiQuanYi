@@ -19,17 +19,11 @@
 <div id="app">
 	<div class="maincontent" >
 		<div class="main_box">
-			<div class="question_list">
+			<div class="question_list" v-for="item in mainData">
 				<div class="question_tlt font30 color3 w710">
-					<span class="color">●</span>如何添加商品？
+					<span class="color">●</span>{{item.title}}
 				</div>
-				<div class="font28 color6 question_detail">如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品</div>
-			</div>
-			<div class="question_list">
-				<div class="question_tlt font30 color3 w710">
-					<span class="color">●</span>如何添加商品？
-				</div>
-				<div class="font28 color6 question_detail">如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品如何添加商品</div>
+				<div class="font28 color6 question_detail">{{item.description}}</div>
 			</div>
 		</div>
 	</div>
@@ -41,104 +35,27 @@
 				el: '#app',
 				data: function() {
 					return {
-						bannerData:[],
-						artData:[],
-						submitData:{
-							content:'',
-							title:'',
-							phone:'',
-							mainImg:[]
-						},
-						picFlag:false,
-						isAnonymous:false,
-						paginate: {
-							
-							count: 0,
-							currentPage: 1,
-							pagesize: 6,
-							is_page: true,
-						},
-
+						mainData:[],
 						searchItem:{
-							
+							thirdapp_id:2,
 						},
-						pageArray:[],
-						allPages:0,
-						linkPage:'',
-						isIos:false
 					}
-
 				},
-				
 				created: function () {
-
-					this.getBannerData();
-				    this.getartData()
+				    this.getMainData()
 				},
-
 				methods:{
-
-					getBannerData() {
-						var self = this;
-						var ua = navigator.userAgent.toLowerCase();
-   						
-					    self.isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
-
-						var postData = {
-						    count: 0,
-						    currentPage: 1,
-						    is_page: true,
-						    pagesize:1,
-						    searchItem:{
-								thirdapp_id:12,
-								title:'轮播图'
-							}
-					    };
-
-						var callback = (res)=>{
-							self.bannerData = res.info.data[0]['mainImg'];
-						};
-						window.base.labelGet(postData,callback);
-					},		
-
-
-
-					messageAdd() {
-						var self = this;
-						var postData = {
-							data:{
-								title:self.submitData.title,
-								phone:self.submitData.phone,
-								content:self.submitData.content,	
-								mainImg:self.submitData.mainImg,
-								user_type:0,
-								thirdapp_id:12,	
-							}
-					    };
-						var callback = (res)=>{
-							if(res.solely_code==100000){
-						
-								alert('提交成功');
-								window.location.reload()
-							}else{
-								alert('网络故障')
-							}
-						};
-						window.base.messageAdd(postData,callback);
-					},
-
-
-					getartData(){
+					getMainData(){
 					    const self = this;
 					    const postData = {};
 					    postData.searchItem = {
-					      thirdapp_id:12
+					      thirdapp_id:2
 					    };
 					    postData.getBefore = {
 					      article:{
 					        tableName:'label',
 					        searchItem:{
-					          title:['=',['注意事项']],
+					          title:['=',['问题解答']],
 					        },
 					        middleKey:'menu_id',
 					        key:'id',
@@ -147,9 +64,9 @@
 					    };
 					    const callback = (res)=>{
 					      if(res.info.data.length>0){
-					        self.artData = res.info.data;
+					        self.mainData = res.info.data;
 					      };
-					      console.log(self.artData);
+					      console.log(self.mainData);
 					   
 					    };
 					    window.base.articleGet(postData,callback);

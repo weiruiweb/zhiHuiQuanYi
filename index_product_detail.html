@@ -24,12 +24,12 @@
 		<div class="product_information w710 flex">
 			<div class="infor_cont">
 				<div class="infor_top flex">
-					<div class="infor_left font32 color3 avoidOverflow">商品名称商品名称商品名称商品名称</div>
-					<div class="infor_right font30" style="text-decoration: line-through ">市场价:¥479</div>
+					<div class="infor_left font32 color3 avoidOverflow">{{mainData.title}}</div>
+					<div class="infor_right font30" style="text-decoration: line-through ">市场价:¥{{mainData.margket_price}}</div>
 				</div>
 				<div class="infor_top  flex">
-					<div class="infor_left font32 color6">商品类型</div>
-					<div class="infor_right font30">出售价:¥269</div>
+					<div class="infor_left font32 color6">{{mainData.type}}</div>
+					<div class="infor_right font30">出售价:¥{{mainData.price}}</div>
 				</div>
 			</div>
 		</div>
@@ -50,7 +50,7 @@
 		</div>
 		<div class="prodouct_show w710 flex">
 			<div class="show_left">
-				<img src="images/product.png">
+				<img :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''">
 			</div>
 			<div class="show_right font30 color6">
 				商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍
@@ -91,169 +91,29 @@
 				el: '#app',
 				data: function() {
 					return {
-						bannerData:[],
-						artData:[],
-						submitData:{
-							content:'',
-							title:'',
-							phone:'',
-							mainImg:[]
-						},
-						picFlag:false,
-						isAnonymous:false,
-						paginate: {
-							
-							count: 0,
-							currentPage: 1,
-							pagesize: 6,
-							is_page: true,
-						},
-
-						searchItem:{
-							
-						},
-						pageArray:[],
-						allPages:0,
-						linkPage:'',
-						isIos:false
+						mainData:[],
+						labelData:[],
 					}
 
 				},
 				
 				created: function () {
-
-					this.getBannerData();
-				    this.getartData()
+					this.getMainData();
 				},
 
 				methods:{
 
-					getBannerData() {
+					getMainData() {
 						var self = this;
-						var ua = navigator.userAgent.toLowerCase();
-   						
-					    self.isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
-
-						var postData = {
-						    count: 0,
-						    currentPage: 1,
-						    is_page: true,
-						    pagesize:1,
-						    searchItem:{
-								thirdapp_id:12,
-								title:'轮播图'
-							}
-					    };
-
+						var postData = {};
+						postData.searchItem = {
+                            id:window.base.GetRequest().id,
+                        }
 						var callback = (res)=>{
-							self.bannerData = res.info.data[0]['mainImg'];
+							self.mainData = res.info.data[0];
 						};
-						window.base.labelGet(postData,callback);
-					},		
-
-
-
-					messageAdd() {
-						var self = this;
-						var postData = {
-							data:{
-								title:self.submitData.title,
-								phone:self.submitData.phone,
-								content:self.submitData.content,	
-								mainImg:self.submitData.mainImg,
-								user_type:0,
-								thirdapp_id:12,	
-							}
-					    };
-						var callback = (res)=>{
-							if(res.solely_code==100000){
-						
-								alert('提交成功');
-								window.location.reload()
-							}else{
-								alert('网络故障')
-							}
-						};
-						window.base.messageAdd(postData,callback);
-					},
-
-
-					getartData(){
-					    const self = this;
-					    const postData = {};
-					    postData.searchItem = {
-					      thirdapp_id:12
-					    };
-					    postData.getBefore = {
-					      article:{
-					        tableName:'label',
-					        searchItem:{
-					          title:['=',['注意事项']],
-					        },
-					        middleKey:'menu_id',
-					        key:'id',
-					        condition:'in',
-					      },
-					    };
-					    const callback = (res)=>{
-					      if(res.info.data.length>0){
-					        self.artData = res.info.data;
-					      };
-					      console.log(self.artData);
-					   
-					    };
-					    window.base.articleGet(postData,callback);
-					},
-
-					upload(e){
-						var self = this;
-						var file = e.target.files[0];
-						console.log(file)
-						var param = new FormData();
-						param.append('file',file,file.name);
-						param.append('thirdapp_id',12);
-						console.log(param.get('file'))
-						
-						var callback = function (res) {
-							if(res.solely_code==100000&&res.info&&res.info.url){ 
-	              				self.submitData.mainImg.push({url:res.info.url})
-	              			}
-						};
-						
-						var res = window.base.upLoadImg(param,callback);
-						
-					},
-
-
-					ifAnonymous(){
-						var self = this;
-						console.log(666)
-						self.isAnonymous = !self.isAnonymous
-						console.log(self.isAnonymous)
-					},
-
-					submit(){
-						var self = this;
-						
-						var newObject = window.base.cloneForm(self.submitData);
-
-						delete newObject.mainImg;
-						if(self.isAnonymous){
-							delete newObject.phone;
-							delete newObject.title;
-						};
-						const pass = window.base.checkComplete(newObject);
-						if(pass){
-							self.messageAdd()
-						}else{
-							alert('请补全信息')
-						};	
-						
-					
-						
-					},
-
-
+						window.base.productGet(postData,callback);
+					},	
 
 				}
 			});

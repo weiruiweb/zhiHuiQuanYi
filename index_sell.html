@@ -23,42 +23,67 @@
 			    <div class="product_tlt flex">
 			        <div class="tlt_cont font32 color3">产品信息</div>
 			    </div>
-			    <div class="product_input sell" style="height: 4.12rem;">
+			    <div class="product_input sell" style="height: 5.15rem;">
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">选择产品类型</div>
-			            <div class="product_right color6">优惠券</div>
+			            <div class="product_right color6">
+			            	<select placeholder="商品类型" v-model="productData.type">
+			            		<option v-for="item in labelData">{{item.title}}</option>			
+			            	</select>
+			            </div>
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">产品来源</div>
-			            <div class="product_right color6">产品来源</div>
+			            <div class="product_right color6">
+			            	<input placeholder="商品来源" v-model="productData.product_source"/>
+			            </div>
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">产品名称</div>
-			            <div class="product_right color6">爱奇艺</div>
+			            <div class="product_right color6">
+			            	<input placeholder="爱奇艺"  v-model="productData.title"/>
+			            </div>
 			        </div>
 			        <div class="infor_list font28 flex" style="border:none;">
-			            <div class="product_left color3">价格</div>
-			            <div class="product_right color6">¥99</div>
+			            <div class="product_left color3">市场价格</div>
+			            <div class="product_right color6">
+			            	<input placeholder="请输入市场价格" v-model="productData.price"/>
+			            </div>
+			        </div>
+			        <div class="infor_list font28 flex" style="border:none;">
+			            <div class="product_left color3">出售价格</div>
+			            <div class="product_right color6">
+			            	<input placeholder="请输入出售价格" v-model="productData.margket_price"/>
+			            </div>
 			        </div>
 			    </div>
 			</div>
 			<div class="product_infor w710">
 			    <div class="product_tlt flex">
-			        <div class="tlt_cont font32 color3">产品有效期</div>
+			        <div class="tlt_cont font32 color3">产品附加信息</div>
 			    </div>
-			    <div class="product_input sell2" style="height: 4.12rem;">
-			    	<div class="del"><img src="images/del.jpg"></div>
+			    <div class="product_input sell sell2" style="height: 4.12rem;">
+			    	<div class="del" @click="cancel"><img src="images/del.jpg"></div>
 			        <div class="infor_list font28 flex" style="height:50%">
 			            <div class="product_left color3" style="width: 25%">上传二维码</div>
-			            <div class="upload_btn">+</div>
+			            
+						<div class="qecored" v-if="productData.mainImg.length>=1&&productData.mainImg?'display:none':''">
+							<img :src="productData.mainImg&&productData.mainImg[0]?productData.mainImg[0].url:''"/>
+						</div>
+						<div class="upload_btn" @change="upload" v-else>+<input  type="file" style="opacity: 0;position: absolute;left:0;top:0;z-index: 1;" accept="image/*" 
+							capture="" multiple /></div>
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">兑换码</div>
-			            <div class="product_right color6">16546</div>
+			            <div class="product_right color6">
+			            	<input placeholder="请输入兑换码" v-model="productData.exchange_code"/>
+			            </div>
 			        </div>
 			        <div class="infor_list font28 flex" style="border:none;">
 			            <div class="product_left color3">有效期</div>
-			            <div class="product_right color6">888899</div>
+			            <div class="product_right color6">
+			            	<input placeholder="请输入有效期" v-model="productData.valid_time"/>
+			            </div>
 			        </div>
 			        <div class="add">
 			        	<div style="text-align: center;">
@@ -67,184 +92,97 @@
 			        </div>
 			    </div>
 			</div>
-			<div class="submit_info" style="margin-top:0.5rem;">提交</div>
+			<div class="submit_info" style="margin-top:0.5rem;" v-on:click="submit">提交</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-			
-			var app = new Vue({
-				el: '#app',
-				data: function() {
-					return {
-						bannerData:[],
-						artData:[],
-						submitData:{
-							content:'',
-							title:'',
-							phone:'',
-							mainImg:[]
-						},
-						picFlag:false,
-						isAnonymous:false,
-						paginate: {
-							
-							count: 0,
-							currentPage: 1,
-							pagesize: 6,
-							is_page: true,
-						},
+	var app = new Vue({
+		el: '#app',
+		data: function() {
+			return {
+				productData:{
+					type:'',
+					product_source:'',
+					title:'',
+					price:'',
+					market_price:'',
+					exchange_code:'',
+					mainImg:[],
+					valid_time:'',
+					category_id:41
+				},
+				labelData:[],
+			}
 
-						searchItem:{
-							
-						},
-						pageArray:[],
-						allPages:0,
-						linkPage:'',
-						isIos:false
+		},
+		
+		created: function () {
+			this.getLabelData();
+		},
+
+		methods:{
+			cancel(){
+				var self = this;
+				delete self.productData.mainImg;
+				delete self.productData.exchange_code;
+				delete self.productData.valid_time;
+			},
+			getLabelData(){
+				var self = this;
+				var postData = {
+					token:'96cf6427db721df57d6c51acbc5d3b84'
+				};
+				postData.searchItem = {
+					type: ["in", [3]]
+			    };
+			    var callback = (res)=>{
+			    	self.labelData = res.info.data;
+			    };
+			    window.base.labelGet(postData,callback);
+			},
+			productAdd() {
+				var self = this;
+				var postData = {
+					token:'96cf6427db721df57d6c51acbc5d3b84',
+					data:self.productData,
+			    };
+				var callback = (res)=>{
+					if(res.solely_code==100000){
+						alert('提交成功');
+						window.location.reload();
+					}else{
+						alert('网络故障')
 					}
+				};
+				window.base.productAdd(postData,callback);
+			},
 
-				},
-				
-				created: function () {
-
-					this.getBannerData();
-				    this.getartData()
-				},
-
-				methods:{
-
-					getBannerData() {
-						var self = this;
-						var ua = navigator.userAgent.toLowerCase();
-   						
-					    self.isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
-
-						var postData = {
-						    count: 0,
-						    currentPage: 1,
-						    is_page: true,
-						    pagesize:1,
-						    searchItem:{
-								thirdapp_id:12,
-								title:'轮播图'
-							}
-					    };
-
-						var callback = (res)=>{
-							self.bannerData = res.info.data[0]['mainImg'];
-						};
-						window.base.labelGet(postData,callback);
-					},		
-
-
-
-					messageAdd() {
-						var self = this;
-						var postData = {
-							data:{
-								title:self.submitData.title,
-								phone:self.submitData.phone,
-								content:self.submitData.content,	
-								mainImg:self.submitData.mainImg,
-								user_type:0,
-								thirdapp_id:12,	
-							}
-					    };
-						var callback = (res)=>{
-							if(res.solely_code==100000){
-						
-								alert('提交成功');
-								window.location.reload()
-							}else{
-								alert('网络故障')
-							}
-						};
-						window.base.messageAdd(postData,callback);
-					},
-
-
-					getartData(){
-					    const self = this;
-					    const postData = {};
-					    postData.searchItem = {
-					      thirdapp_id:12
-					    };
-					    postData.getBefore = {
-					      article:{
-					        tableName:'label',
-					        searchItem:{
-					          title:['=',['注意事项']],
-					        },
-					        middleKey:'menu_id',
-					        key:'id',
-					        condition:'in',
-					      },
-					    };
-					    const callback = (res)=>{
-					      if(res.info.data.length>0){
-					        self.artData = res.info.data;
-					      };
-					      console.log(self.artData);
-					   
-					    };
-					    window.base.articleGet(postData,callback);
-					},
-
-					upload(e){
-						var self = this;
-						var file = e.target.files[0];
-						console.log(file)
-						var param = new FormData();
-						param.append('file',file,file.name);
-						param.append('thirdapp_id',12);
-						console.log(param.get('file'))
-						
-						var callback = function (res) {
-							if(res.solely_code==100000&&res.info&&res.info.url){ 
-	              				self.submitData.mainImg.push({url:res.info.url})
-	              			}
-						};
-						
-						var res = window.base.upLoadImg(param,callback);
-						
-					},
-
-
-					ifAnonymous(){
-						var self = this;
-						console.log(666)
-						self.isAnonymous = !self.isAnonymous
-						console.log(self.isAnonymous)
-					},
-
-					submit(){
-						var self = this;
-						
-						var newObject = window.base.cloneForm(self.submitData);
-
-						delete newObject.mainImg;
-						if(self.isAnonymous){
-							delete newObject.phone;
-							delete newObject.title;
-						};
-						const pass = window.base.checkComplete(newObject);
-						if(pass){
-							self.messageAdd()
-						}else{
-							alert('请补全信息')
-						};	
-						
-					
-						
-					},
-
-
-
-				}
-			});
-			
-		</script>
+			upload(e){
+				var self = this;
+				var file = e.target.files[0];
+				console.log(file)
+				var param = new FormData();
+				param.append('file',file,file.name);
+				param.append('thirdapp_id',2);
+				param.append('token','96cf6427db721df57d6c51acbc5d3b84');
+				console.log(param.get('file'))
+				var callback = function (res) {
+					if(res.solely_code==100000&&res.info&&res.info.url){ 
+          				self.productData.mainImg.push({url:res.info.url})
+          			}
+				};
+				var res = window.base.upLoadImg(param,callback);
+			},
+			submit(){
+			    const self = this;
+				self.productAdd();
+				  
+		  	},
+		}
+	});
+	
+</script>
 </body>
 </html>
