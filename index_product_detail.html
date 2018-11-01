@@ -28,7 +28,7 @@
 					<div class="infor_right font30" style="text-decoration: line-through ">市场价:¥{{mainData.origin_price}}</div>
 				</div>
 				<div class="infor_top  flex">
-					<div class="infor_left font32 color6">{{mainData.type}}</div>
+					<div class="infor_left font32 color6">{{mainData.label?mainData.label[mainData.category_id].title:''}}</div>
 					<div class="infor_right font30">出售价:¥{{mainData.price}}</div>
 				</div>
 			</div>
@@ -79,7 +79,7 @@
 				el: '#app',
 				data: function() {
 					return {
-						mainData:[],
+						mainData:{},
 						labelData:[],
 						order_id:'',
 						totalPrice:'',
@@ -94,28 +94,33 @@
 
 				methods:{
 
-					  counter(e){
-					    const self = this;
-					    console.log(window.base.getDataSet(e,'type').type)
-					    if(window.base.getDataSet(e,'type').type=='+'){
-					      self.count++;
-					    }else if(self.count > '1'){
-					      self.count--;
-					    }
-					    self.countTotalPrice();
-					  },
+						counter(e){
+						    const self = this;
+						    console.log(window.base.getDataSet(e,'type').type)
+						    if(window.base.getDataSet(e,'type').type=='+'){
+						      self.count++;
+						    }else if(self.count > '1'){
+						      self.count--;
+						    }
+						    console.log(self.count)
+						    self.countTotalPrice();
+						},
 
-					getMainData() {
-						var self = this;
-						var postData = {};
-						postData.searchItem = {
-                            id:window.base.GetRequest().id,
-                        }
-						var callback = (res)=>{
-							self.mainData = res.info.data[0];
-						};
-						window.base.productGet(postData,callback);
-					},	
+						getMainData() {
+							const self = this;
+							const postData = {};
+							postData.searchItem = {
+		                        id:window.base.GetRequest().id,
+		                    }
+							const callback = (res)=>{
+
+								self.mainData = res.info.data[0];
+								self.countTotalPrice()
+							};
+							
+							
+							window.base.productGet(postData,callback);
+						},	
 
 
 					  addOrder(){
@@ -126,7 +131,7 @@
 					        product:[
 					          {id:window.base.GetRequest().id,count:self.count}
 					        ],
-					        pay:{balance:self.totalPrice.toFixed(2)},
+					        pay:{wxPay:self.totalPrice},
 					        type:1
 					      };
 					      const callback = (res)=>{
@@ -150,16 +155,19 @@
 					      searchItem:{
 					        id:order_id,
 					      },
-					      balance:self.totalPrice.toFixed(2),
+					      wxPay:self.totalPrice,
 					      wxPayStatus:0
 					    };
 					    
 					    const callback = (res)=>{
 					      
 					      if(res.solely_code==100000){
-					        alert('ok')
-					         
-					       
+					        const payCallback=(payData)=>{
+					          if(payData==1){
+					            alert('支付成功')      
+					          }
+					        };
+					        window.base.realPay(res.info,payCallback);   
 					      }else{
 					        alert(res.msg)
 					      };
@@ -173,10 +181,10 @@
 
 					  countTotalPrice(){  
 					    const self = this;
-					    var totalPrice = 0;
-					    totalPrice += self.count*parseFloat(self.mainData.price);
+					    var totalPrice = 0;	
+					    totalPrice += self.count*self.mainData.price;
 					    self.totalPrice = totalPrice;
-					    console.log(self.totalPric)
+					    console.log(self.totalPrice)
 					  },
 
 				},

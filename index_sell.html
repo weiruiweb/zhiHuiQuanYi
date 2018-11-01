@@ -28,6 +28,7 @@
 			            <div class="product_left color3">选择产品类型</div>
 			            <div class="product_right color6">
 			            	<select placeholder="商品类型" @change="selectChange"  id="productType">
+			            		<option>请选择</option>		
 			            		<option v-for="item in labelData" :id="item.id">{{item.title}}</option>			
 			            	</select>
 			            </div>
@@ -63,7 +64,7 @@
 			        <div class="tlt_cont font32 color3">产品附加信息</div>
 			    </div>
 			    <div class="product_input sell sell2" style="height: 4.12rem;">
-			    	<div class="del" @click="cancel"><img src="images/del.jpg"></div>
+			    	<div class="del" @click="deleteImage"><img src="images/del.jpg"></div>
 			        <div class="infor_list font28 flex" style="height:50%">
 			            <div class="product_left color3" style="width: 25%">上传二维码</div>
 			            
@@ -92,7 +93,7 @@
 			        </div>
 			    </div>
 			</div>
-			<div class="submit_info" style="margin-top:0.5rem;" v-on:click="submit">提交</div>
+			<div class="submit_info" style="margin-top:0.5rem;" v-on:click="productAdd">提交</div>
 		</div>
 	</div>
 </div>
@@ -129,7 +130,7 @@
 			getLabelData(){
 				var self = this;
 				var postData = {
-					token:localStorage.getItem('user_token'),
+	
 				};
 				postData.searchItem = {
 					type: ["in", [3]]
@@ -165,7 +166,8 @@
 				param.append('file',file,file.name);
 				param.append('thirdapp_id',2);
 				param.append('token',localStorage.getItem('user_token'));
-				console.log(param.get('file'))
+
+				console.log(self.productData)
 				var callback = function (res) {
 					if(res.solely_code==100000&&res.info&&res.info.url){ 
           				self.productData.mainImg.push({url:res.info.url})
@@ -181,9 +183,24 @@
               console.log('selectChange',self.productData);
             },
 
+      		deleteImage(){
+      			const self = this;
+      			if(self.productData.mainImg.length>0){
+      				console.log(self.productData)
+      				self.productData.mainImg.splice(0, 1)
+      			}else{
+      				alert('没有更多了')
+      			}	
+      		},
+
 			submit(){
                 const self = this;	
-                if(window.base.checkComplete(self.productData)){
+                console.log(self.productData)
+                var newObject = window.base.cloneForm(self.productData);
+
+				delete newObject.mainImg;
+                console.log(newObject)
+                if(window.base.checkComplete(newObject)){
                     self.productAdd()
                 }else{
                     alert('请补全信息')

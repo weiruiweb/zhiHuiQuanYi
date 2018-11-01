@@ -21,10 +21,7 @@
 	<div class="maincontent" >
 		<div class="main_box">
 			<div class="buy_sort" :class="is_show?'slideIn':'slideOut'">
-				<a>全部</a>
-				<a>文具袋</a>
-				<a>文件夹</a>
-				<a>办公桌</a>
+				<a v-for="(item,index) in labelData" :id="item.id" @click="changeBind" :style="item.id==	category_id?'color:#4abef9':''">{{item.title}}</a>
 			</div>
 			<div class="menu w710" @click="toggle">
 				<img src="images/sort.jpg">
@@ -50,76 +47,92 @@
 	</div>
 </div>
 <script src="js/jquery-2.1.4.min.js"></script>
-<!-- <script type="text/babel">
+<script type="text/javascript">
 	var app = new Vue({
 		el: '#app',
 		data: function() {
 			return {
+				paginate: {
+					
+					count: 0,
+					currentPage: 1,
+					pagesize: 6,
+					is_page: true,
+				},
+				labelData:[],
 				mainData:[],
 				is_show:false,
+				category_id:41
 			}
 		},
+
 		created: function () {
-			this.getMainData();
+		    this.getMainData();
+		    this.getLabelData()
 		},
+
 		methods:{
+
 			toggle(e){
 				var self = this;
 				self.is_show = !self.is_show;
 			},
-			getMainData(){
-				const postData = {
-			    	token:"cf67f62c3722fb256c8f78bdb20ec388",
-			    };
-			    postData.searchItem = {
-			      thirdapp_id:2,
-				  category_id:41,
-			    };
-			    const callback = (res)=>{
-			      if(res.info.data.length>0){
-			        self.mainData = res.info.data;
-			      };
-			      console.log(self.mainData);
-			    };
-			    window.base.productGet(postData,callback);
-			},
-		}
-	});
-</script> -->
-<script type="text/babel">
-	var app = new Vue({
-		el: '#app',
-		data: function() {
-			return {
-				mainData:[],
-				is_show:false,
-			}
-		},
-		created: function () {
-		    this.getMainData()
-		},
-		methods:{
-			toggle(e){
-				var self = this;
-				self.is_show = !self.is_show;
-			},
-			getMainData(){
+
+			getMainData(isNew){
 			    const self = this;
+	          	if(isNew){
+                    self.mainData = [];
+                    self.paginate = {
+                        count: 0,
+                        currentPage: 1,
+                        pagesize: 6,
+                        is_page: true,
+                    }
+                };
 			    const postData = {
-			    	token:localStorage.getItem('user_token'),
+			    	
 			    };
+			    postData.paginate = window.base.cloneForm(self.paginate);
 			    postData.searchItem = {
 			      thirdapp_id:2,
-				  category_id:41,
+				  category_id:window.base.cloneForm(self.category_id),
 			    };
 			    const callback = (res)=>{
-			      if(res.info.data.length>0){
-			        self.mainData = res.info.data;
-			      };
+			        if(res.info.data.length>0){
+			          self.mainData.push.apply(self.mainData,res.info.data);
+			        }else{
+			        
+			          alert('没有更多了');
+			        }
 			      console.log(self.mainData);
 			    };
 			    window.base.productGet(postData,callback);
 			},
+
+			changeBind(e){
+				const self = this;
+				self.category_id = e.target.id;
+				console.log(e);
+				self.getMainData(true)
+			},
+
+			getLabelData(){
+				var self = this;
+				var postData = {
+
+				};
+				postData.searchItem = {
+					type: ["in", [3]]
+			    };
+			    postData.order = {
+			    	create_time:'normal'
+			    }
+			    var callback = (res)=>{
+			    	self.labelData = res.info.data;
+			    };
+			    window.base.labelGet(postData,callback);
+			},
+
 			intoDetail(e) {
                 var self = this;
                 var art_id = window.base.getDataSet(e).path;

@@ -61,6 +61,36 @@ window.base={
         return e.target.selectedOptions[0].text;
     },  
 
+    realPay(param,callback){
+        wx.requestPayment({
+            'timeStamp': param.timeStamp,
+            'nonceStr': param.nonceStr,
+            'package': param.package,
+            'signType': param.signType,
+            'paySign': param.paySign,
+            success: function () {
+                wx.showToast({
+                    title: '支付成功',
+                    icon: 'success',
+                    duration: 1000,
+                    mask:true
+                  });
+                  
+                callback && callback(1);
+            },
+            fail: function () {
+                wx.showToast({
+                    title: '支付失败',
+                    icon: 'success',
+                    duration: 1000,
+                    mask:true
+                });
+                callback && callback(0);
+            }
+        });
+
+    },
+
     getWxauthToken:function(param,callback) {
   
         var allParams = {
