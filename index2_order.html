@@ -135,8 +135,12 @@
 				},
 				
 				created: function () {
-					this.getMainData();
-					this.getProductData()
+					var callback = (res)=>{
+				      	this.getMainData();
+						this.getProductData()
+				    };
+	        		window.base.getUserToken(callback);	
+					
 				},
 
 				methods:{

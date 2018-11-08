@@ -55,8 +55,10 @@
 					}
 				},
 				created: function () { 
-
-					this.userGet()
+					var callback = (res)=>{
+		              	this.userGet()
+			        };
+			        window.base.getUserToken(callback);	
 				},
 
 				methods:{

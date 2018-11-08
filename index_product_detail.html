@@ -89,7 +89,11 @@
 				},
 				
 				created: function () {
-					this.getMainData();
+					var callback = (res)=>{
+		              this.getMainData();
+		
+			        };
+			        window.base.getUserToken(callback);	
 				},
 
 				methods:{

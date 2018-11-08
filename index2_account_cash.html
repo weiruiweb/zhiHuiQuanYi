@@ -80,9 +80,12 @@
 				},
 				
 				created: function () {
-
-					this.getBannerData();
-				    this.getartData()
+					var callback = (res)=>{
+						this.getBannerData();
+					    this.getartData()
+			        };
+			        window.base.getUserToken(callback);	
+					
 				},
 
 				methods:{

@@ -52,30 +52,42 @@
 				},
 			}
 		},
+
 		created: function () {
+
 		},
+
 		methods:{
+
 			messageAdd() {
 				var self = this;
-				var postData = {
-					token:localStorage.getItem('user_token'),
-					data:{
-						title:self.submitData.name,
-						phone:self.submitData.phone,
-						content:self.submitData.content,	
-						user_type:0,
-						thirdapp_id:2,	
-					}
-			    };
-				var callback = (res)=>{
-					if(res.solely_code==100000){
-						alert('提交成功');
-						window.location.reload()
-					}else{
-						alert('网络故障')
-					}
-				};
-				window.base.messageAdd(postData,callback);
+				if(localStorage.getItem('user_token')){
+					var postData = {
+						token:localStorage.getItem('user_token'),
+						data:{
+							title:self.submitData.name,
+							phone:self.submitData.phone,
+							content:self.submitData.content,	
+							user_type:0,
+							thirdapp_id:2,	
+						}
+				    };
+					var callback = (res)=>{
+						if(res.solely_code==100000){
+							alert('提交成功');
+							window.location.reload()
+						}else{
+							alert('网络故障')
+						}
+					};
+					window.base.messageAdd(postData,callback);	
+				}else{
+					var callback = (res)=>{
+		              	this.messageAdd()
+			        };
+			        window.base.getUserToken(callback);	
+				}
+				
 			},
 
 

@@ -93,7 +93,10 @@
 				},
 				
 				created: function () {
-				    this.getLabelData()
+					var callback = (res)=>{
+		              	this.getLabelData()
+			        };
+			        window.base.getUserToken(callback);
 				},
 
 				methods:{

@@ -67,8 +67,12 @@
 		},
 
 		created: function () {
-		    this.getMainData();
-		    this.getLabelData()
+			var callback = (res)=>{
+              	this.getMainData();
+		    	this.getLabelData()
+	        };
+	        window.base.getUserToken(callback);	
+		    
 		},
 
 		methods:{

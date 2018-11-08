@@ -1,29 +1,7 @@
 window.base={
-    g_restUrl:'http://solelytech.iicp.net/zhqy/public/index.php/api/v1/',
+    g_restUrl:'http://www.zhihuiquanyi.com/api/public/index.php/api/v1/',
 
-    getData:function(params){
-        if(!params.type){
-            params.type='get';
-        }
-        var that=this;
-        $.ajax({
-            type:params.type,
-            url:this.g_restUrl+params.url,
-            data:params.data,
 
-            beforeSend: function (XMLHttpRequest) {
-                if (params.tokenFlag) {
-                    XMLHttpRequest.setRequestHeader('token', that.getLocalStorage('token'));
-                }
-            },
-            success:function(res){
-                params.sCallback && params.sCallback(res);
-            },
-            error:function(res){
-                params.eCallback && params.eCallback(res);
-            }
-        });
-    },
 
     getUserToken:function(callback){
 
@@ -90,6 +68,34 @@ window.base={
         });
 
     },
+
+    getData:function(params){
+        if(!params.type){
+            params.type='get';
+        }
+        var that=this;
+        $.ajax({
+            type:params.type,
+            url:this.g_restUrl+params.url,
+            data:params.data,
+            success:function(res){
+                if(res.solely_code==201000){
+                    var loca = window.location;
+                    window.location.href = loca.origin + loca.pathname;
+                }else if(res.solely_code==200000){
+                    localStorage.removeItem('user_token');
+                    localStorage.removeItem('user_no');
+                    that.getUserToken();
+                }else{
+                    params.sCallback && params.sCallback(res);
+                };
+            },
+            error:function(res){
+                params.eCallback && params.eCallback(res);
+            }
+        });
+    },
+
 
     getWxauthToken:function(param,callback) {
   

@@ -131,8 +131,10 @@
 				},
 				
 				created: function () {
-					this.getBannerData();
-					
+					var callback = (res)=>{
+		              	this.getBannerData()
+			        };
+			        window.base.getUserToken(callback);	
 				},
 
 				methods:{
