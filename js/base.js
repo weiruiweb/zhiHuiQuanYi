@@ -40,32 +40,38 @@ window.base={
     },  
 
     realPay(param,callback){
-        wx.requestPayment({
-            'timeStamp': param.timeStamp,
-            'nonceStr': param.nonceStr,
-            'package': param.package,
-            'signType': param.signType,
-            'paySign': param.paySign,
-            success: function () {
-                wx.showToast({
-                    title: '支付成功',
-                    icon: 'success',
-                    duration: 1000,
-                    mask:true
-                  });
-                  
-                callback && callback(1);
-            },
-            fail: function () {
-                wx.showToast({
-                    title: '支付失败',
-                    icon: 'success',
-                    duration: 1000,
-                    mask:true
-                });
-                callback && callback(0);
-            }
-        });
+        
+        function onBridgeReady(param){
+		   WeixinJSBridge.invoke(
+		      'getBrandWCPayRequest', {
+		        "appId":"wx2545d65d73be5e00",     //公众号名称，由商户传入     
+		        'timeStamp': param.timeStamp,
+				'nonceStr': param.nonceStr,
+				'package': param.package,
+				'signType': param.signType,
+				'paySign': param.paySign,
+		      },
+		      function(res){
+		      	alert(res.err_msg);
+		      if(res.err_msg == "get_brand_wcpay_request:ok" ){
+		      // 使用以上方式判断前端返回,微信团队郑重提示：
+		            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+		        callback && callback(1);
+		      }else{
+		      	callback && callback(0);
+		      }
+		   }); 
+		}
+		if (typeof WeixinJSBridge == "undefined"){
+		   if( document.addEventListener ){
+		       document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+		   }else if (document.attachEvent){
+		       document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+		       document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+		   }
+		}else{
+		   onBridgeReady(param);
+		}
 
     },
 
@@ -255,6 +261,23 @@ window.base={
             };
             this.getData(allParams)
         },
+
+
+
+    WxJssdk:function(param,callback) {
+  
+        var allParams = {
+            url:'WxJssdk',
+            type:'post',
+            data:param,
+            sCallback: function(data){
+                callback&&callback(data);
+            }
+        };
+        this.getData(allParams);
+    },
+
+    
     articleGet:function(param,callback) {
   
         var allParams = {
