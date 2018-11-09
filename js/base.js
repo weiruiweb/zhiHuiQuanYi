@@ -1,5 +1,5 @@
 window.base={
-    g_restUrl:'http://www.zhihuiquanyi.com/api/public/index.php/api/v1/',
+    g_restUrl:'https://www.zhihuiquanyi.com/api/public/index.php/api/v1/',
 
 
 
