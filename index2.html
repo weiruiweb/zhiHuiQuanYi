@@ -126,24 +126,7 @@
 				methods:{
 
 
-					getMainData(){
-					    const self = this;
-					    const postData = {
-					    	token:localStorage.getItem('user_token'),
-					    	user_no:localStorage.getItem('user_no'),
-					    };
-					    postData.searchItem = {
-					      thirdapp_id:2
-					    };
-					    const callback = (res)=>{
-					      if(res.info.data.length>0){
-					        self.mainData = res.info.data;
-					      };
-					      console.log(self.mainData);
-					   
-					    };
-					    window.base.articleGet(postData,callback);
-					},
+	
 
 					userGet(){
 		                const self = this;

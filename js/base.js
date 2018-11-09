@@ -29,7 +29,7 @@ window.base={
             callback&&callback();
         }else{
             var href =  window.location.href;
-            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7cd6c5fcb1acb373&redirect_uri='+
+            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2545d65d73be5e00&redirect_uri='+
             encodeURIComponent(href)+'&response_type=code&scope=snsapi_userinfo';
         };
         
@@ -267,7 +267,7 @@ window.base={
         };
         this.getData(allParams)
     },
-    accountGet:function(param,callback) {
+    flowLogGet:function(param,callback) {
   
         var allParams = {
             url:'Common/FlowLog/get',
@@ -279,6 +279,19 @@ window.base={
         };
         this.getData(allParams)
     },
+
+    flowLogAdd:function(param,callback) {
+  
+        var allParams = {
+            url:'Common/FlowLog/add',
+            type:'post',
+            data:param,
+            sCallback: function(data){
+                callback&&callback(data);
+            }
+        };
+        this.getData(allParams)
+    },  
     
     checkComplete:function(obj){
         var pass = true;

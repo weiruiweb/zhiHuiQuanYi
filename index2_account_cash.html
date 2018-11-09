@@ -6,7 +6,7 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
 <META HTTP-EQUIV="Expires" CONTENT="0">
-<title>体现</title>
+<title>提现</title>
 <script src="js/jquery1.8.3.js"></script>
 <script src="js/rem.js"></script>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -22,8 +22,8 @@
 	        <div class="user_left flex">
 	            <img src="images/bank.png" class="user_bank">
 	            <div class="bank_infor font30 color6">
-	            	<div class="bank_name">中国工商银行</div>
-	            	<div class="bank_card">1654646469</div>
+	            	<div class="bank_name">{{userData.info?userData.info.email:''}}</div>
+	            	<div class="bank_card">{{userData.info?userData.info.idCard:''}}</div>
 	            </div>
 	        </div>
 	        <div class="next_page">
@@ -34,192 +34,117 @@
 	    	<div class="cash_tlt font30 color3">可提现金额</div>
 	    	<div style="border-bottom: solid 1px #e0e0e0;padding-bottom: 0.3rem;">
 		    	<div class="input_list font28 flex" style="border:none;">
-		    		<input placeholder="¥45" class="font32"/>
-					<div class="input_before color font28">全部体现</div>
+		    		<input placeholder="请输入提现金额" class="font32" v-model='submitData.balance'/>
+					<div class="input_before color font28" v-on:click="allMoney">全部提现</div>
 				</div>
-				<p class="font28 color3">可提现金额:¥454</p>
+				<p class="font28 color3">可提现金额:¥{{userData.info?userData.info.balance:''}}</p>
 			</div>
 	    </div>
-	    <div class="submit_info">确认体现</div>
+	    <div class="submit_info" v-on:click="submit">确认提现</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 			
-			var app = new Vue({
-				el: '#app',
-				data: function() {
-					return {
-						bannerData:[],
-						artData:[],
-						submitData:{
-							content:'',
-							title:'',
-							phone:'',
-							mainImg:[]
-						},
-						picFlag:false,
-						isAnonymous:false,
-						paginate: {
-							
-							count: 0,
-							currentPage: 1,
-							pagesize: 6,
-							is_page: true,
-						},
-
-						searchItem:{
-							
-						},
-						pageArray:[],
-						allPages:0,
-						linkPage:'',
-						isIos:false
-					}
-
-				},
-				
-				created: function () {
-					var callback = (res)=>{
-						this.getBannerData();
-					    this.getartData()
-			        };
-			        window.base.getUserToken(callback);	
-					
-				},
-
-				methods:{
-
-					getBannerData() {
-						var self = this;
-						var ua = navigator.userAgent.toLowerCase();
-   						
-					    self.isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
-
-						var postData = {
-						    count: 0,
-						    currentPage: 1,
-						    is_page: true,
-						    pagesize:1,
-						    searchItem:{
-								thirdapp_id:12,
-								title:'轮播图'
-							}
-					    };
-
-						var callback = (res)=>{
-							self.bannerData = res.info.data[0]['mainImg'];
-						};
-						window.base.labelGet(postData,callback);
-					},		
-
-
-
-					messageAdd() {
-						var self = this;
-						var postData = {
-							data:{
-								title:self.submitData.title,
-								phone:self.submitData.phone,
-								content:self.submitData.content,	
-								mainImg:self.submitData.mainImg,
-								user_type:0,
-								thirdapp_id:12,	
-							}
-					    };
-						var callback = (res)=>{
-							if(res.solely_code==100000){
-						
-								alert('提交成功');
-								window.location.reload()
-							}else{
-								alert('网络故障')
-							}
-						};
-						window.base.messageAdd(postData,callback);
-					},
-
-
-					getartData(){
-					    const self = this;
-					    const postData = {};
-					    postData.searchItem = {
-					      thirdapp_id:12
-					    };
-					    postData.getBefore = {
-					      article:{
-					        tableName:'label',
-					        searchItem:{
-					          title:['=',['注意事项']],
-					        },
-					        middleKey:'menu_id',
-					        key:'id',
-					        condition:'in',
-					      },
-					    };
-					    const callback = (res)=>{
-					      if(res.info.data.length>0){
-					        self.artData = res.info.data;
-					      };
-					      console.log(self.artData);
-					   
-					    };
-					    window.base.articleGet(postData,callback);
-					},
-
-					upload(e){
-						var self = this;
-						var file = e.target.files[0];
-						console.log(file)
-						var param = new FormData();
-						param.append('file',file,file.name);
-						param.append('thirdapp_id',12);
-						console.log(param.get('file'))
-						
-						var callback = function (res) {
-							if(res.solely_code==100000&&res.info&&res.info.url){ 
-	              				self.submitData.mainImg.push({url:res.info.url})
-	              			}
-						};
-						
-						var res = window.base.upLoadImg(param,callback);
-						
-					},
-
-
-					ifAnonymous(){
-						var self = this;
-						console.log(666)
-						self.isAnonymous = !self.isAnonymous
-						console.log(self.isAnonymous)
-					},
-
-					submit(){
-						var self = this;
-						
-						var newObject = window.base.cloneForm(self.submitData);
-
-						delete newObject.mainImg;
-						if(self.isAnonymous){
-							delete newObject.phone;
-							delete newObject.title;
-						};
-						const pass = window.base.checkComplete(newObject);
-						if(pass){
-							self.messageAdd()
-						}else{
-							alert('请补全信息')
-						};	
-						
-					
-						
-					},
-
-
-
-				}
-			});
+	var app = new Vue({
+		el: '#app',
+		data: function() {
+			return {
 			
-		</script>
+				userData:[],
+				submitData:{
+					balance:''
+				},
+
+			}
+
+		},
+		
+		created: function () {
+			var callback = (res)=>{
+				this.getUserInfoData();
+	        };
+	        window.base.getUserToken(callback);	
+			
+		},
+
+		methods:{
+
+		
+
+
+           	getUserInfoData(){
+              const self = this;
+              const postData = {};
+              postData.token = localStorage.getItem('user_token');
+              const callback = (res)=>{
+                if(res.info.data.length>0){
+                  self.userData = res.info.data[0]
+                }
+              };
+              window.base.userGet(postData,callback);   
+            },
+
+
+
+            allMoney(){
+            	const self = this;
+            	self.submitData.balance = userData.info.balance
+            },
+
+            flowLogAdd(){
+              const self = this;
+              const postData = {
+                token:localStorage.getItem('user_token'),
+                data:{
+                  user_no:self.userData.user_no,
+                  count:-self.submitData.balance,
+                  trade_info:'提现',
+                  status:0,
+                  type:2
+                }
+              };
+              const callback = (res)=>{
+                if(res.solely_code==100000){
+                  alert('申请成功');  
+                }
+                
+              };
+              window.base.flowLogAdd(postData,callback)
+            },
+
+
+            
+
+            submit(){
+              const self = this;
+              if(!self.userData){
+                alert('数据错误请稍等')
+              }
+              var num = self.submitData.balance;
+              console.log(num)
+              console.log(self.userData)
+              const pass = window.base.checkComplete(self.submitData);
+              if(pass){  
+                if(parseFloat(self.userData.info.balance)>=num){
+                  if(!(/(^[1-9]\d*$)/.test(num))){
+                   alert('请输入正整数')
+                  }else{
+                    self.flowLogAdd();
+                  }   
+                }else{
+                  alert('佣金不足');  
+                }   
+              }else{
+                alert('请输入提现金额');
+              };
+            },
+
+
+
+		}
+	});
+	
+</script>
 </body>
 </html>
