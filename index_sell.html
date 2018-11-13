@@ -18,7 +18,7 @@
 <body>
 <div id="app">
 	<div class="maincontent" >
-		<div class="main_box">
+		<div class="main_box" v-for="(item,index) in cardNum">
 			<div class="product_infor w710">
 			    <div class="product_tlt flex">
 			        <div class="tlt_cont font32 color3">产品信息</div>
@@ -87,14 +87,14 @@
 			            </div>
 			        </div>
 			        <div class="add">
-			        	<div style="text-align: center;">
+			        	<div style="text-align: center;" v-on:click="addCardNum">
 				        	<img src="images/add.png"/>
 				        </div>
 			        </div>
 			    </div>
 			</div>
-			<div class="submit_info" style="margin-top:0.5rem;" v-on:click="productAdd">提交</div>
 		</div>
+		<div class="submit_info" style="margin-top:0.5rem;" v-on:click="productAdd">提交</div>
 	</div>
 </div>
 
@@ -104,7 +104,7 @@
 		data: function() {
 			return {
 				productData:{
-			
+					
 					product_source:'',
 					title:'',
 					price:'',
@@ -113,10 +113,13 @@
 					mainImg:[],
 					valid_time:'',
 					category_id:'',
-					status:0
+					status:0,
 					type:1,
+					user_no:localStorage.getItem('user_no')
+
 				},
 				labelData:[],
+				cardNum:[1],
 			}
 
 		},
@@ -146,6 +149,15 @@
 			    };
 			    window.base.labelGet(postData,callback);
 			},
+
+			  addCardNum(){
+			    const self = this;
+			    var newCard = self.cardNum[self.cardNum.length-1] + 1;
+			    self.cardNum.push(newCard);
+			    console.log(newCard)
+			    
+			    console.log(self.cardNum)
+			  },
 
 			productAdd() {
 				var self = this;

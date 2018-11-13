@@ -56,7 +56,7 @@
 			                <div class="font28 color6 product_top">出售:{{item.products[0].snap_product?item.products[0].snap_product.success_number:''}}</div>
 			                <div class="font32 color6 flexRowBetween  product_top">
 			                    <div class="product_name">¥{{item.price}}</div>
-			                    <div class="font24 color submit_info buy_now handle">立即购买</div>
+			                    <div class="font24 color submit_info buy_now handle" @click="pay" data-id="item.id" data-price="item.price">立即购买</div>
 			                </div>
 			            </div>
 			        </div>
@@ -88,7 +88,7 @@
 			                <div class="font28 color6 product_top">出售:{{item.success_number}}</div>
 			                <div class="font32 color6 flexRowBetween  product_top">
 			                    <div class="product_name">¥{{item.price}}</div>
-			                    <div class="font24 color submit_info buy_now handle">立即购买</div>
+			                    
 			                </div>
 			            </div>
 			        </div>
@@ -259,8 +259,35 @@
 						    self.getProductData(true)	
 					    }
 					    
+					 
+					  },
+
+
+					  pay(e){
+					    const self = this;
+					    const postData = {
+					      token:localStorage.getItem('user_token'),
+					      searchItem:{
+					        id:window.base.getDataSet(e).id,
+					      },
+					      wxPay:window.base.getDataSet(e).price,
+					      wxPayStatus:0
+					    };
 					    
-					    
+					    const callback = (res)=>{
+					      
+					      if(res.solely_code==100000){
+					        const payCallback=(payData)=>{
+					          if(payData==1){
+					            alert('支付成功')      
+					          }
+					        };
+					        window.base.realPay(res.info,payCallback);   
+					      }else{
+					        alert(res.msg)
+					      };
+					    };
+					    window.base.pay(postData,callback);
 					  },
 				}
 			});
