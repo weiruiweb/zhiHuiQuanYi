@@ -35,6 +35,15 @@ input{ outline:none;}
     width:7.5rem;
     height:3.18rem;
 }
+.carousel-inner{
+    width: 7.5rem;
+    height:3.18rem;
+    overflow: hidden;
+}
+.carousel-inner img{
+    width:7.5rem;
+    height:3.18rem;
+}
 .w710{
     width:94.8%;
     padding:0 2.6%;
@@ -99,7 +108,7 @@ input{ outline:none;}
     align-items:center;
 }
 .avoidOverflow{
-    overflow-y:hidden;
+    overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
 }
@@ -765,12 +774,10 @@ input{ outline:none;}
     height: 50%;
 }
 .infor_left{
-    width:70%;
+    width:60%;
 }
 .infor_right{
-    width:30%;
-}
-.infor_right{
+    width:40%;
     color:#e83632;
     text-align: right;
 }
@@ -851,6 +858,7 @@ input{ outline:none;}
     height: 0.76rem;
     line-height: 0.76rem;
     text-align: center;
+    font-size:0.4rem;
 }
 .buy_number{
     width:40%;
@@ -876,3 +884,7 @@ input{ outline:none;}
     box-shadow: 0 0 0.1rem #666;
     left: 0;
 }
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    display: block;
+    width: 100%;
+    height: 3.18rem;
