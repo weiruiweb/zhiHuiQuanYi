@@ -82,6 +82,7 @@
 						order_id:'',
 						totalPrice:'',
 						count:1,
+						buttonClick:false
 					}
 
 				},
@@ -155,6 +156,10 @@
 
 					  addOrder(){
 					    const self = this;
+					    if(self.buttonClick){
+					    	return
+					    };
+					    self.buttonClick = true;
 					 	if(!self.order_id){
 					      const postData = {
 					        token:localStorage.getItem('user_token'),
@@ -193,8 +198,10 @@
 					      
 					      if(res.solely_code==100000){
 					        const payCallback=(payData)=>{
+					        self.buttonClick = false;
 					          if(payData==1){
-					            alert('支付成功')      
+					            alert('支付成功')
+					            window.location.href='index2_order.html';      
 					          }
 					        };
 					        window.base.realPay(res.info,payCallback);   

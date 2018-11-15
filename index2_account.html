@@ -36,12 +36,12 @@
 			<div class="record_title2">时间</div>
 		</div>
 		<div class="record_list flex color6" v-for="item in mainData">
-			<div class="record_title avoidOverflow">{{item.title}}</div>
+			<div class="record_title avoidOverflow">{{item.orderItem[0].snap_product?item.orderItem[0].snap_product.title:''}}</div>
 			<div class="record_title avoidOverflow">{{item.trade_info}}</div>
-			<div class="record_title1 color number">+5</div>
+			<div class="record_title1 color number">{{item.orderItem[0]?item.orderItem[0].count:''}}</div>
 			<div class="record_title1">{{item.count}}</div>
 			<div class="record_title1">{{item.status==1?'已完成':'审核中'}}</div>
-			<div class="record_title2 font22 color9">{{item.update_time}}</div>
+			<div class="record_title2 font22 color9">{{item.create_time}}</div>
 		</div>
 	</div>
 </div>
@@ -63,6 +63,7 @@
 	       window.base.getUserToken(callback);	
 		},
 		methods:{
+
 			getMainData(){
 			    const self = this;
 			    const postData = {
@@ -70,10 +71,21 @@
 			    };
 			    postData.searchItem = {
 			      thirdapp_id:2,
-			      type:2,
+			      type:1,
 			      status:['in',[0,1]],
 				  user_type:0,
 			    };
+			    postData.getAfter = {
+			    	orderItem:{
+			    		tableName:'OrderItem',
+			    		middleKey:'order_no',
+			    		key:'order_no',
+			    		searchItem:{
+			    			status:1
+			    		},
+			    		condition:'='
+			    	}
+				};
 			    const callback = (res)=>{
 			      if(res.info.data.length>0){
 			        self.mainData = res.info.data;

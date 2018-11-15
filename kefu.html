@@ -6,7 +6,7 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
 <META HTTP-EQUIV="Expires" CONTENT="0">
-<title>联系我们</title>
+<title>客服二维码</title>
 <script src="js/jquery1.8.3.js"></script>
 <script src="js/rem.js"></script>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -18,20 +18,9 @@
 <body style="background: #fff;">
 <div id="app">
 	<div class="maincontent" >
-		<div class="contact flex">
-			<div class="contact_left">
-				<a href="tel://mainData.description">
-					<img src="images/contact1.png">
-					<p class="font32 color3">联系我们</p>
-					<p class="font28">请拨打客服电话</p>
-				</a>
-			</div>
-			<div class="contact_left contact_right">
-				<a href="kefu.html">
-					<img src="images/contact2.png">
-					<p class="font32 color3">微信客服</p>
-					<p class="font28">添加微信号联系客服</p>
-				</a>
+		<div class="contact flex" style="margin-top:1rem"> 
+			<div class="contact_left contact_right" style="width:100%">
+				<img :src="mainData.mainImg?mainData.mainImg[0].url:''" style="width:7rem;height:10rem">
 			</div>
 		</div>
 	</div>
@@ -43,12 +32,13 @@
 				el: '#app',
 				data: function() {
 					return {
+						mainData:[]
 					}
 
 				},
 				
 				created: function () {
-					this.getLabelData
+					this.getLabelData()
 				},
 
 				methods:{
@@ -59,7 +49,7 @@
                        const postData = {};
                         postData.searchItem = {
                             thirdapp_id:2,
-                            title:['=','客服电话']
+                            title:['=','客服微信']
                         };
                
                         var callback = (res)=>{

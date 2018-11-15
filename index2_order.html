@@ -28,7 +28,8 @@
 			    </div>
 			</div>
 			<div class="tab font30 flexRowBetween" v-if="is_show==0">
-			    <div class="tab_item" :class="(num == 0?'tab_this':'')" :data-num="0" @click="menuClick">
+			    <div class="tab_item" :class="(num == 0?'tab_this':'')" :data-num="0" 
+			    @click="menuClick">
 			        全部订单
 			    </div>
 			    <div class="tab_item" :class="(num == 1?'tab_this':'')" :data-num="1" @click="menuClick">
@@ -53,10 +54,16 @@
 			        <div class="product_right1 flexRowBetween">
 			            <div class="product_detail">
 			                <div class="font32 color3 product_top">{{item.products[0].snap_product?item.products[0].snap_product.title:''}}</div>
-			                <div class="font28 color6 product_top">出售:{{item.products[0].snap_product?item.products[0].snap_product.success_number:''}}</div>
+			                <div class="font28 color6 product_top">{{item.products[0].snap_product?item.products[0].snap_product.label[item.products[0].snap_product.category_id].title:''}}</div>
 			                <div class="font32 color6 flexRowBetween  product_top">
 			                    <div class="product_name">¥{{item.price}}</div>
-			                    <div class="font24 color submit_info buy_now handle" @click="pay" data-id="item.id" data-price="item.price">立即购买</div>
+			                    <div class="font24 color submit_info buy_now handle" @click="pay" data-id="item.id" data-price="item.price" v-if="item.pay_status==0">立即购买</div>
+			                    <div class="font24 color submit_info buy_now handle" v-if="item.pay_status==1&&item.transport_status==0&&item.order_step==0">待使用
+			                    </div>
+			                    <div class="font24 color submit_info buy_now handle" v-if="item.pay_status==1&&item.transport_status==1&&item.order_step==0">已完成
+			                    </div>
+			                     <div class="font24 color submit_info buy_now handle" v-if="item.pay_status==1&&item.transport_status==1&&item.order_step==1">纠纷中
+			                    </div>
 			                </div>
 			            </div>
 			        </div>
@@ -130,6 +137,8 @@
 						linkPage:'',
 						productData:[],
 						is_show:0,
+						buttonClick:false,
+						isLoadAll:false
 					}
 
 				},
@@ -173,17 +182,23 @@
 					        if(res.info.data.length>0){
 					          self.mainData.push.apply(self.mainData,res.info.data);
 					        }else{
-					        
+					         self.isLoadAll = true;
 					          alert('没有更多了');
 					        }
-			 
+			 				
 					      }else{
 					        alert('网络故障')
 					      }
-					     
+					     self.buttonClick = false;
 					    };
 					    window.base.orderGet(postData,callback);
 					},
+
+				
+
+
+			
+
 
 					getProductData(isNew){
 					    const self = this;
@@ -209,19 +224,23 @@
 					          self.productData.push.apply(self.productData,res.info.data);
 					        }else{
 					        
-					          alert('没有更多了');
+					         
 					        }
 			 
 					      }else{
 					        alert('网络故障')
 					      }
-					     
+					     self.buttonClick = false;
 					    };
 					    window.base.productGet(postData,callback);
 					},
 
 					menuClick: function (e) {
 					    const self = this;
+					    if(self.buttonClick){
+							return
+						};
+					    self.buttonClick = true;
 					   	self.num = e.currentTarget.dataset.num;
 					    self.changeSearch(self.num);
 					  },
@@ -244,7 +263,7 @@
 						      self.searchItem.transport_status = '1';
 						      self.searchItem.order_step = '0';
 						    }else if(num=='4'){
-						      self.searchItem.order_step = '3';
+						      self.searchItem.order_step = '1';
 						    }	
 						    self.getMainData(true);
 					    }else if(self.is_show==1){
@@ -289,9 +308,28 @@
 					    };
 					    window.base.pay(postData,callback);
 					  },
+
+					  
+				
+					  
+
 				}
 			});
+
+		
 			
-		</script>
+</script>
+<script>
+  	$(window).scroll(function(event){
+		
+	    var wScrollY = window.scrollY; // 当前滚动条位置  
+	    var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+	    var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+	    if (wScrollY + wInnerH >= bScrollH) {          
+	        this.paginate.currentPage++;
+			this.getMainData();
+	    }  
+	});
+</script>		
 </body>
 </html>

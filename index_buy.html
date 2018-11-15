@@ -21,7 +21,7 @@
 	<div class="maincontent" >
 		<div class="main_box">
 			<div class="buy_sort" :class="is_show?'slideIn':'slideOut'">
-				<a v-for="(item,index) in labelData" :id="item.id" @click="changeBind" :style="item.id==	category_id?'color:#4abef9':''">{{item.title}}</a>
+				<a v-for="(item,index) in labelData" :id="item.id" @click="changeBind" :style="item.id==category_id?'color:#4abef9':''">{{item.title}}</a>
 			</div>
 			<div class="menu w710" @click="toggle">
 				<img src="images/sort.jpg">
@@ -62,7 +62,8 @@
 				labelData:[],
 				mainData:[],
 				is_show:false,
-				category_id:41
+				category_id:41,
+				buttonClick:false
 			}
 		},
 
@@ -109,6 +110,7 @@
 			        
 			          alert('没有更多了');
 			        }
+			        self.buttonClick = false;
 			      console.log(self.mainData);
 			    };
 			    window.base.productGet(postData,callback);
@@ -116,6 +118,10 @@
 
 			changeBind(e){
 				const self = this;
+				if(self.buttonClick){
+					return
+				};
+				self.buttonClick  = true;
 				self.category_id = e.target.id;
 				console.log(e);
 				self.getMainData(true)

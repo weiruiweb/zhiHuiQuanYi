@@ -437,10 +437,10 @@ input{ outline:none;}
     height: 100%;
 }
 .add{
-    width:100%;
+    
     position: absolute;
     bottom: -0.4rem;
-    left: 0;
+    left: 44%;
 }
 .add img{
     width:0.8rem;
