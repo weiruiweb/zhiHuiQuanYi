@@ -201,7 +201,7 @@ window.base={
                                 // 这个不关会扔一个默认值 application/x-www-form-urlencoded 过去，后端拿不到数据的！
                                 // 而且你甚至不能传个字符串 'multipart/form-data'，后端一样拿不到数据！
             processData: false, // 关关关！重点
-            url: 'http://solelytech.iicp.net/zhqy/public/index.php/api/v1/Base/FtpImage/upload',
+            url: 'https://www.zhihuiquanyi.com/api/public/index.php/api/v1/Base/FtpImage/upload',
             data: param,
             success:function(res){
                 callback && callback(res);

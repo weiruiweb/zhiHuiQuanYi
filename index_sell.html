@@ -27,34 +27,34 @@
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">选择产品类型</div>
 			            <div class="product_right color6">
-			            	<select placeholder="商品类型" @change="selectChange"  id="productType">
-			            		<option>请选择</option>		
-			            		<option v-for="item in labelData" :id="item.id">{{item.title}}</option>			
+			            	<select placeholder="商品类型" v-model="item.category_id"   id="productType" :data-index="index">
+			            		<option label="请选择" :value="0"></option>		
+			            		<option v-for="c_item in labelData" :label="c_item.title" :value="c_item.id"></option>			
 			            	</select>
 			            </div>
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">产品来源</div>
 			            <div class="product_right color6">
-			            	<input placeholder="商品来源" v-model="productData.product_source"/>
+			            	<input placeholder="商品来源"  v-model="item.product_source" />
 			            </div>
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">产品名称</div>
 			            <div class="product_right color6">
-			            	<input placeholder="爱奇艺"  v-model="productData.title"/>
+			            	<input placeholder="爱奇艺"  v-model="item.title"/>
 			            </div>
 			        </div>
 			        <div class="infor_list font28 flex" style="border:none;">
 			            <div class="product_left color3">市场价格</div>
 			            <div class="product_right color6">
-			            	<input placeholder="请输入市场价格" v-model="productData.origin_price"/>
+			            	<input placeholder="请输入市场价格" v-model="item.origin_price"/>
 			            </div>
 			        </div>
 			        <div class="infor_list font28 flex" style="border:none;">
 			            <div class="product_left color3">出售价格</div>
 			            <div class="product_right color6">
-			            	<input placeholder="请输入出售价格" v-model="productData.price"/>
+			            	<input placeholder="请输入出售价格" v-model="item.price"/>
 			            </div>
 			        </div>
 			    </div>
@@ -68,22 +68,22 @@
 			        <div class="infor_list font28 flex" style="height:50%">
 			            <div class="product_left color3" style="width: 25%">上传二维码</div>
 			            
-						<div class="qecored" v-if="productData.mainImg.length>=1&&productData.mainImg?'display:none':''">
-							<img :src="productData.mainImg&&productData.mainImg[0]?productData.mainImg[0].url:''"/>
+						<div class="qecored" v-if="item.mainImg.length>=1&&item.mainImg?'display:none':''">
+							<img :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" />
 						</div>
 						<div class="upload_btn" @change="upload" v-else>+<input  type="file" style="opacity: 0;position: absolute;left:0;top:0;z-index: 1;" accept="image/*" 
-							capture="" multiple /></div>
+							capture="" multiple :data-index="index"/></div>
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">兑换码</div>
 			            <div class="product_right color6">
-			            	<input placeholder="请输入兑换码" v-model="productData.exchange_code"/>
+			            	<input placeholder="请输入兑换码" v-model="item.exchange_code"/>
 			            </div>
 			        </div>
 			        <div class="infor_list font28 flex" style="border:none;">
 			            <div class="product_left color3">有效期</div>
 			            <div class="product_right color6">
-			            	<input placeholder="请输入有效期" v-model="productData.valid_time"/>
+			            	<input placeholder="请输入有效期" v-model="item.valid_time"/>
 			            </div>
 			        </div>
 			        <div class="add">
@@ -103,8 +103,9 @@
 		el: '#app',
 		data: function() {
 			return {
-				productData:{
-					
+			
+				labelData:[],
+				cardNum:[{
 					product_source:'',
 					title:'',
 					price:'',
@@ -112,14 +113,12 @@
 					exchange_code:'',
 					mainImg:[],
 					valid_time:'',
-					category_id:'',
+					category_id:0,
 					status:0,
 					type:1,
-					user_no:localStorage.getItem('user_no')
-
-				},
-				labelData:[],
-				cardNum:[1],
+					user_no:localStorage.getItem('user_no'),
+					thirdapp_id:2
+				}],
 			}
 
 		},
@@ -153,7 +152,20 @@
 			  addCardNum(){
 			    const self = this;
 			    var newCard = self.cardNum[self.cardNum.length-1] + 1;
-			    self.cardNum.push(newCard);
+			    self.cardNum.push({
+			    	product_source:'',
+					title:'',
+					price:'',
+					origin_price:'',
+					exchange_code:'',
+					mainImg:[],
+					valid_time:'',
+					category_id:0,
+					status:0,
+					type:1,
+					user_no:localStorage.getItem('user_no'),
+					thirdapp_id:2,
+			    });
 			    console.log(newCard)
 			    
 			    console.log(self.cardNum)
@@ -163,7 +175,7 @@
 				var self = this;
 				var postData = {
 					token:localStorage.getItem('user_token'),
-					data:self.productData,
+					dataArray:self.cardNum,
 			    };
 				var callback = (res)=>{
 					if(res.solely_code==100000){
@@ -179,33 +191,30 @@
 			upload(e){
 				var self = this;
 				var file = e.target.files[0];
-				console.log(file)
+				var index = e.target.dataset.index;
+				console.log(e)
 				var param = new FormData();
 				param.append('file',file,file.name);
 				param.append('thirdapp_id',2);
 				param.append('token',localStorage.getItem('user_token'));
 
-				console.log(self.productData)
+				console.log(self.item)
 				var callback = function (res) {
 					if(res.solely_code==100000&&res.info&&res.info.url){ 
-          				self.productData.mainImg.push({url:res.info.url})
+          				self.cardNum[index].mainImg.push({url:res.info.url})
           			}
 				};
 				var res = window.base.upLoadImg(param,callback);
 			},
 
-			selectChange(e){ 
-              const self = this;
-              self.productData.category_id = $(":selected","#productType").attr("id");
-            
-              console.log('selectChange',self.productData);
-            },
+		
 
       		deleteImage(){
       			const self = this;
-      			if(self.productData.mainImg.length>0){
-      				console.log(self.productData)
-      				self.productData.mainImg.splice(0, 1)
+      			 var index = e.target.dataset.index; 
+      			if(self.cardNum.mainImg.length>0){
+      				console.log(self.cardNum)
+      				self.cardNum[index].mainImg.splice(0, 1)	
       			}else{
       				alert('没有更多了')
       			}	
@@ -213,8 +222,8 @@
 
 			submit(){
                 const self = this;	
-                console.log(self.productData)
-                var newObject = window.base.cloneForm(self.productData);
+                console.log(self.cardNum)
+                var newObject = window.base.cloneForm(self.cardNum);
 
 				delete newObject.mainImg;
                 console.log(newObject)

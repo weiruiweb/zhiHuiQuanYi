@@ -54,6 +54,12 @@
 				mainData:[],
 			}
 		},
+
+		mounted () {
+		  window.addEventListener('scroll', this.handleScroll)
+		},
+
+
 		created: function () {
 		    
 		    var callback = (res)=>{
@@ -62,7 +68,19 @@
 	        };
 	       window.base.getUserToken(callback);	
 		},
+
+
 		methods:{
+
+			handleScroll(){
+				var wScrollY = window.scrollY; // 当前滚动条位置  
+			    var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+			    var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+			    if (wScrollY + wInnerH >= bScrollH) {          
+			        this.paginate.currentPage++;
+					this.getMainData();
+			    } 
+			},
 
 			getMainData(){
 			    const self = this;

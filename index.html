@@ -26,6 +26,7 @@
 			    <ol class="carousel-indicators">
 			        <li v-for="(item, index) in bannerData.mainImg" data-target="#carousel" :data-slide-to="index" :class="index=='0'?'active':''"></li>
 			    </ol>
+			    
 			    <div class="carousel-inner" role="listbox">
 			        <div v-for="(item, index) in bannerData.mainImg" class="item" :class="index=='0'?'active':''" >
 			          <img :src="item.url" alt="...">
