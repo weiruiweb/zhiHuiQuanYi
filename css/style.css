@@ -11,7 +11,6 @@ input{ outline:none;}
 .clr:after{clear:both;content:'\0020';display:block;visibility:hidden;height:0;}
 .clr{zoom:1;}
 
-
 /*主体*/
 .carousel-indicators li{
     margin:0 0.1rem;
@@ -28,21 +27,21 @@ input{ outline:none;}
 }
 .banner{
     width: 7.5rem;
-    height:3.18rem;
+    height:3.68rem;
     overflow: hidden;
 }
 .banner img{
     width:7.5rem;
-    height:3.18rem;
+    height:3.68rem;
 }
 .carousel-inner{
     width: 7.5rem;
-    height:3.18rem;
+    height:3.68rem;
     overflow: hidden;
 }
 .carousel-inner img{
     width:7.5rem;
-    height:3.18rem;
+    height:3.68rem;
 }
 .w710{
     width:94.8%;
@@ -469,22 +468,22 @@ input{ outline:none;}
     margin-top: 0.3rem;
 }
 .menu img{
-    width:0.32rem;
-    height: 0.32rem;
+    width:0.46rem;
+    height: 0.42rem;
 }
 .buy_sort{
-    width:2rem;
+    width:2.4rem;
     height: auto;
     background: #f2f2f2;
     position: absolute;
-    left:-2rem;
+    left:-2.4rem;
     top:1rem;
 }
 .buy_sort a{
     width:100%;
-    height:0.6rem;
+    height:0.7rem;
     display: inline-block;
-    line-height: 0.6rem;
+    line-height: 0.7rem;
     border-bottom: solid 1px #e0e0e0;
     text-align: center;
 }
@@ -810,6 +809,8 @@ input{ outline:none;}
 }
 #note{
     margin-top:0.3rem;
+    overflow: hidden;
+    min-height: 2rem;
 }
 .note_banner{
     width:100%;
@@ -887,4 +888,10 @@ input{ outline:none;}
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {
     display: block;
     width: 100%;
-    height: 3.18rem;
+    height: 3.68rem;
+}
+.carousel-control img{
+    width:14px;
+    height:24px;
+    margin:0 auto;
+}
