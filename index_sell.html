@@ -27,7 +27,8 @@
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">选择产品类型</div>
 			            <div class="product_right color6">
-			            	<select placeholder="商品类型" v-model="item.category_id"   id="productType" :data-index="index">
+			            	<select placeholder="商品类型" v-model="item.category_id"   id="productType" 
+			            	:data-index="index">
 			            		<option label="请选择" :value="0"></option>		
 			            		<option v-for="c_item in labelData" :label="c_item.title" :value="c_item.id"></option>			
 			            	</select>
@@ -64,7 +65,7 @@
 			        <div class="tlt_cont font32 color3">产品附加信息</div>
 			    </div>
 			    <div class="product_input sell sell2" style="height: 4.12rem;">
-			    	<div class="del" @click="deleteImage"><img src="images/del.jpg"></div>
+			    	<div class="del" @click="deleteImage" :data-index="index"><img src="images/del.jpg"></div>
 			        <div class="infor_list font28 flex" style="height:50%">
 			            <div class="product_left color3" style="width: 25%">上传二维码</div>
 			            
@@ -87,8 +88,11 @@
 			            </div>
 			        </div>
 			        <div class="add">
-			        	<div style="text-align: center;" v-on:click="addCardNum">
+			        	<div style="text-align: center;" v-on:click="addCardNum" v-if="index==0">
 				        	<img src="images/add.png"/>
+				        </div>
+				        <div style="text-align: center;" v-on:click="minCardNum" :data-index="index" v-if="index>0">
+				        	<img src="images/del.jpg"/>
 				        </div>
 			        </div>
 			    </div>
@@ -149,7 +153,7 @@
 			    window.base.labelGet(postData,callback);
 			},
 
-			  addCardNum(){
+			addCardNum(){
 			    const self = this;
 			    var newCard = self.cardNum[self.cardNum.length-1] + 1;
 			    self.cardNum.push({
@@ -170,6 +174,15 @@
 			    
 			    console.log(self.cardNum)
 			  },
+
+			minCardNum(e){
+				const self = this;
+				console.log(e)
+				const index = e.target.dataset.index;
+				var newCard = self.cardNum;
+				self.cardNum.splice(index,1)
+				console.log(self.cardNum)
+				},
 
 			productAdd() {
 				var self = this;
@@ -209,10 +222,11 @@
 
 		
 
-      		deleteImage(){
+      		deleteImage(e){
       			const self = this;
-      			 var index = e.target.dataset.index; 
-      			if(self.cardNum.mainImg.length>0){
+      			var index = e.target.dataset.index; 
+      			console.log(e)
+      			if(self.cardNum[index].mainImg.length>0){
       				console.log(self.cardNum)
       				self.cardNum[index].mainImg.splice(0, 1)	
       			}else{
