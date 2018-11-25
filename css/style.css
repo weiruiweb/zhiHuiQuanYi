@@ -10,7 +10,8 @@ input{ outline:none;}
 .clear{ clear:both;}
 .clr:after{clear:both;content:'\0020';display:block;visibility:hidden;height:0;}
 .clr{zoom:1;}
-
+select{ -webkit-appearance: none;}
+select option{color:#000;}
 /*主体*/
 .carousel-indicators li{
     margin:0 0.1rem;
