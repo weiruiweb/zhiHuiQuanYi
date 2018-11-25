@@ -30,7 +30,7 @@
 			            	<select placeholder="商品类型" v-model="item.category_id"   id="productType" 
 			            	:data-index="index">
 			            		<option label="请选择" :value="0"></option>		
-			            		<option v-for="c_item in labelData" :label="c_item.title" :value="c_item.id"></option>			
+			            		<option v-for="c_item in labelData" :label="c_item.title" :value="c_item.id">{{c_item.title}}</option>			
 			            	</select>
 			            </div>
 			        </div>
