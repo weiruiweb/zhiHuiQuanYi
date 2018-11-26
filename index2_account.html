@@ -28,20 +28,20 @@
 		</div>
 		<div class="cash_tlt font30 color3">交易记录</div>
 		<div class="cash_record flex color3 font30">
-			<div class="record_title">商品</div>
-			<div class="record_title">交易编号</div>
-			<div class="record_title1">数量</div>
-			<div class="record_title1">价格</div>
-			<div class="record_title1">状态</div>
-			<div class="record_title2">时间</div>
+			<div class="record_title" style="width:25%">商品</div>
+			<div class="record_title" style="width:25%">交易编号</div>
+			<div class="record_title1" style="width:25%">数量</div>
+			<div class="record_title1" style="width:25%">价格</div>
+			
+			<div class="record_title2" style="width:25%">时间</div>
 		</div>
 		<div class="record_list flex color6" v-for="item in mainData">
-			<div class="record_title avoidOverflow">{{item.orderItem[0].snap_product?item.orderItem[0].snap_product.title:''}}</div>
-			<div class="record_title avoidOverflow">{{item.trade_info}}</div>
-			<div class="record_title1 color number">{{item.orderItem[0]?item.orderItem[0].count:''}}</div>
-			<div class="record_title1">{{item.count}}</div>
-			<div class="record_title1">{{item.status==1?'已完成':'审核中'}}</div>
-			<div class="record_title2 font22 color9">{{item.create_time}}</div>
+			<div class="record_title avoidOverflow" style="width:25%">{{item.orderItem[0].snap_product?item.orderItem[0].snap_product.title:''}}</div>
+			<div class="record_title avoidOverflow" style="width:25%">{{item.orderItem[0]?item.orderItem[0].order_no:''}}</div>
+			<div class="record_title1 color number" style="width:25%">{{item.orderItem[0]?item.orderItem[0].count:''}}</div>
+			<div class="record_title1" style="width:25%">{{item.count}}</div>
+			
+			<div class="record_title2 font22 color9" style="width:25%">{{item.create_time}}</div>
 		</div>
 	</div>
 </div>
@@ -52,6 +52,7 @@
 			return {
 				userData:[],
 				mainData:[],
+				isLoadAll:false
 			}
 		},
 
@@ -107,6 +108,9 @@
 			    const callback = (res)=>{
 			      if(res.info.data.length>0){
 			        self.mainData = res.info.data;
+			      }else{
+			        self.isLoadAll = true;
+			        alert('没有更多了');
 			      };
 			      console.log(self.mainData);
 			    };

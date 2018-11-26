@@ -65,15 +65,23 @@
 			        <div class="tlt_cont font32 color3">产品附加信息</div>
 			    </div>
 			    <div class="product_input sell sell2" style="height: 4.12rem;">
-			    	<div class="del" @click="deleteImage" :data-index="index"><img src="images/del.jpg"></div>
+			 
+			    	<div class="del"  style="width:0.5rem;height:0.5rem" ><img src="images/del.jpg"  @click="deleteImage" :data-index="index"></div>
 			        <div class="infor_list font28 flex" style="height:50%">
 			            <div class="product_left color3" style="width: 25%">上传二维码</div>
 			            
 						<div class="qecored" v-if="item.mainImg.length>=1&&item.mainImg?'display:none':''">
 							<img :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" />
 						</div>
+
 						<div class="upload_btn" @change="upload" v-else>+<input  type="file" style="opacity: 0;position: absolute;left:0;top:0;z-index: 1;" accept="image/*" 
-							capture="" multiple :data-index="index"/></div>
+							 multiple v-if="isIos" :data-index="index"></input>
+						
+
+							<input  type="file" style="opacity: 0;position: absolute;left:0;top:0;z-index: 1;" accept="image/*" 
+							 multiple v-else :data-index="index"></input>
+						</div>
+
 			        </div>
 			        <div class="infor_list font28 flex">
 			            <div class="product_left color3">兑换码</div>
@@ -88,17 +96,17 @@
 			            </div>
 			        </div>
 			        <div class="add">
-			        	<div style="text-align: center;" v-on:click="addCardNum" v-if="index==0">
+			        	<div style="text-align: center;" @click="addCardNum" v-if="index==0">
 				        	<img src="images/add.png"/>
 				        </div>
-				        <div style="text-align: center;" v-on:click="minCardNum" :data-index="index" v-if="index>0">
-				        	<img src="images/del.jpg"/>
+				        <div style="text-align: center;"  v-if="index>0">
+				        	<img src="images/del.jpg"/ @click="minCardNum($event)" :data-index="index">
 				        </div>
 			        </div>
 			    </div>
 			</div>
 		</div>
-		<div class="submit_info" style="margin-top:0.5rem;" v-on:click="productAdd">提交</div>
+		<div class="submit_info" style="margin-top:0.5rem;" v-on:click="submit">提交</div>
 	</div>
 </div>
 
@@ -123,6 +131,7 @@
 					user_no:localStorage.getItem('user_no'),
 					thirdapp_id:2
 				}],
+				isIos:false,
 			}
 
 		},
@@ -141,6 +150,8 @@
 			
 			getLabelData(){
 				var self = this;
+				var ua = navigator.userAgent.toLowerCase();
+				self.isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
 				var postData = {
 	
 				};
@@ -179,8 +190,9 @@
 				const self = this;
 				console.log(e)
 				const index = e.target.dataset.index;
+				console.log(index)
 				var newCard = self.cardNum;
-				self.cardNum.splice(index,1)
+				self.cardNum.splice(parseInt(index),1)
 				console.log(self.cardNum)
 				},
 
@@ -225,7 +237,7 @@
       		deleteImage(e){
       			const self = this;
       			var index = e.target.dataset.index; 
-      			console.log(e)
+      			console.log(index)
       			if(self.cardNum[index].mainImg.length>0){
       				console.log(self.cardNum)
       				self.cardNum[index].mainImg.splice(0, 1)	
@@ -237,11 +249,8 @@
 			submit(){
                 const self = this;	
                 console.log(self.cardNum)
-                var newObject = window.base.cloneForm(self.cardNum);
-
-				delete newObject.mainImg;
-                console.log(newObject)
-                if(window.base.checkComplete(newObject)){
+             
+                if(window.base.checkCompleteArray(self.cardNum)){
                     self.productAdd()
                 }else{
                     alert('请补全信息')

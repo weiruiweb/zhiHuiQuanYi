@@ -63,7 +63,8 @@
 				mainData:[],
 				is_show:false,
 				category_id:41,
-				buttonClick:false
+				buttonClick:false,
+				isLoadAll:false
 			}
 		},
 
@@ -86,10 +87,11 @@
 				var wScrollY = window.scrollY; // 当前滚动条位置  
 			    var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
 			    var bScrollH = document.body.scrollHeight; // 滚动条总高度      
-			    if (wScrollY + wInnerH >= bScrollH) {          
+			    if ((wScrollY + wInnerH >= bScrollH)&&!this.isLoadAll) {   
+   
 			        this.paginate.currentPage++;
 					this.getMainData();
-			    } 
+			    }; 
 			},
 
 			toggle(e){
@@ -121,9 +123,9 @@
 			        if(res.info.data.length>0){
 			          self.mainData.push.apply(self.mainData,res.info.data);
 			        }else{
-			        
-			          alert('没有更多了');
-			        }
+			        	self.isLoadAll = true;
+			          	alert('没有更多了');
+			        };
 			        self.buttonClick = false;
 			      console.log(self.mainData);
 			    };

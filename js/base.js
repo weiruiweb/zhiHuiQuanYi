@@ -326,6 +326,16 @@ window.base={
         return pass;
         console.log(pass);
     },
+
+    checkCompleteArray:function(Array){
+        var pass = true;
+        for (var i = 0; i < Array.length; i++) {
+        	pass = this.checkComplete(Array[i])
+        };
+        return pass;
+        console.log(pass);
+    },
+
     articleOne:function(param,callback) {
         var allParams = {
             url:'UserArticle/GetInfo',

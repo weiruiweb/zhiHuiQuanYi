@@ -45,7 +45,7 @@
 			</div>
 			<div class="tlt_left1 flexCenter" style="border-left: solid 1px #e0e0e0;">
 				<img src="images/detail_icon2.png">
-				<span  class="font28 color6">成交单数:{{mainData.success_number}}</span>
+				<span  class="font28 color6">成交单数:{{mainData.standard}}</span>
 			</div>
 		</div>
 		<div class="big_title flexRowBetween">
@@ -119,7 +119,8 @@
 							const postData = {};
 							postData.searchItem = {
 		                        id:window.base.GetRequest().id,
-		                    }
+		                    };
+
 							const callback = (res)=>{
 
 								self.mainData = res.info.data[0];
