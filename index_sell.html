@@ -96,11 +96,16 @@
 			            </div>
 			        </div>
 			        <div class="add">
-			        	<div style="text-align: center;" @click="addCardNum" v-if="index==0">
+			        	<div style="text-align: center;" @click="addCardNum($event)" v-if="index==0">
 				        	<img src="images/add.png"/>
 				        </div>
+				    </div>
+				    <div class="add" style="left:40%;display:flex">
 				        <div style="text-align: center;"  v-if="index>0">
-				        	<img src="images/del.jpg"/ @click="minCardNum($event)" :data-index="index">
+				        	<img src="images/add.png"/ @click="addCardNum($event)" :data-index="index">
+				        </div>
+				        <div style="text-align: center;"  v-if="index>0">
+				        	<img src="images/min.png"/ @click="minCardNum($event)" :data-index="index">
 				        </div>
 			        </div>
 			    </div>

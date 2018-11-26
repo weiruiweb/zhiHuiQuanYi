@@ -57,7 +57,7 @@
 			                <div class="font28 color6 product_top">{{item.products[0].snap_product?item.products[0].snap_product.label[item.products[0].snap_product.category_id].title:''}}</div>
 			                <div class="font32 color6 flexRowBetween  product_top">
 			                    <div class="product_name">¥{{item.price}}</div>
-			                    <div class="font24 color submit_info buy_now handle" @click="pay" data-id="item.id" data-price="item.price" v-if="item.pay_status==0">立即购买</div>
+			                    <div class="font24 color submit_info buy_now handle" @click="pay" :data-id="item.id" :data-price="item.price" v-if="item.pay_status==0">立即购买</div>
 			                    <div class="font24 color submit_info buy_now handle" v-if="item.pay_status==1&&item.transport_status==0&&item.order_step==0">待使用
 			                    </div>
 			                    <div class="font24 color submit_info buy_now handle" v-if="item.pay_status==1&&item.transport_status==1&&item.order_step==0">已完成
@@ -163,7 +163,8 @@
 						var wScrollY = window.scrollY; // 当前滚动条位置  
 					    var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
 					    var bScrollH = document.body.scrollHeight; // 滚动条总高度      
-					   	if ((wScrollY + wInnerH >= bScrollH)&&!this.isLoadAll) {          
+					   	if ((wScrollY + wInnerH >= bScrollH)&&!this.isLoadAll&&!this.buttonClick) {
+					   		this.buttonClick = true;          
 					        this.paginate.currentPage++;
 							this.getMainData();
 					    } 

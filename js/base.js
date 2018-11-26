@@ -210,7 +210,7 @@ window.base={
                 callback && callback(res);
             }
         });
-
+        this.getData(param);
     },
 
 
@@ -319,7 +319,8 @@ window.base={
     checkComplete:function(obj){
         var pass = true;
         for(var key in obj){
-          if(!obj[key]){
+          if(!obj[key]&&obj[key]!=0){
+          	console.log(obj[key]);
             pass = false;
           };
         };

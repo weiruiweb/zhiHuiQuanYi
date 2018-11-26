@@ -38,6 +38,7 @@
 			                <div class="font32 color6 flexRowBetween  product_top">
 			                    <div class="product_name">¥{{item.price}}</div>
 			                    <div class="font24 color1 submit_info buy_now" class="color1" :data-path="item.id" @click="intoDetail">立即购买</div>
+			              
 			                </div>
 			            </div>
 			        </div>			
@@ -84,11 +85,13 @@
 		methods:{
 
 			handleScroll(){
+
 				var wScrollY = window.scrollY; // 当前滚动条位置  
 			    var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
 			    var bScrollH = document.body.scrollHeight; // 滚动条总高度      
-			    if ((wScrollY + wInnerH >= bScrollH)&&!this.isLoadAll) {   
-   
+			    if ((wScrollY + wInnerH >= bScrollH)&&!this.isLoadAll&&!this.buttonClick) {   
+   					
+   					this.buttonClick = true;
 			        this.paginate.currentPage++;
 					this.getMainData();
 			    }; 
