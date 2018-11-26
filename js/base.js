@@ -204,13 +204,23 @@ window.base={
             url: 'https://www.zhihuiquanyi.com/api/public/index.php/api/v1/Base/FtpImage/upload',
             data: param,
             success:function(res){
-                callback && callback(res);
+
+                if(res.solely_code==201000){
+                    var loca = window.location;
+                    window.location.href = loca.origin + loca.pathname;
+                }else if(res.solely_code==200000){
+                    localStorage.removeItem('user_token');
+                    localStorage.removeItem('user_no');
+                    that.getUserToken();
+                }else{
+                    callback && callback(res);
+                };
+
             },
             error:function(res){
                 callback && callback(res);
             }
         });
-        this.getData(param);
     },
 
 
