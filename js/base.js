@@ -194,7 +194,7 @@ window.base={
     } ,
 
     upLoadImg:function(param,callback) {
-    
+        var that=this;
         $.ajax({ // $.post，告辞
             type: 'post',
             contentType: false, // 关关关！必须得 false
