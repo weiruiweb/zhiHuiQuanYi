@@ -329,7 +329,7 @@ window.base={
     checkComplete:function(obj){
         var pass = true;
         for(var key in obj){
-          if(!obj[key]&&obj[key]!=0){
+          if(!obj[key]||obj[key]=='0'){
           	console.log(obj[key]);
             pass = false;
           };
