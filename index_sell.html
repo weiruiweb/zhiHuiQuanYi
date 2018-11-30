@@ -132,7 +132,6 @@
 					valid_time:'',
 					category_id:0,
 					type:1,
-					user_no:localStorage.getItem('user_no'),
 					thirdapp_id:2
 				}],
 				isIos:false,
@@ -182,7 +181,6 @@
 					category_id:0,
 					status:0,
 					type:1,
-					user_no:localStorage.getItem('user_no'),
 					thirdapp_id:2,
 			    });
 			    console.log(newCard)
@@ -209,6 +207,7 @@
 			    
 			    for (var i = 0;i< postData.dataArray.length;i++) {
 			    	postData.dataArray[i].status = 0;
+			    	postData.dataArray[i].user_no = localStorage.getItem('user_no');
 			    };
 				var callback = (res)=>{
 					if(res.solely_code==100000){
