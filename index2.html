@@ -19,15 +19,12 @@
 <div id="app">
 	<div class="maincontent" >
 		<div class="main_box">
-			<div class="user_top">
+			<div class="user_top flex">
 				<div class="user_img flex">
-					
-						<img  class="user_photo" :src="userData.headImgUrl" />
-				
+					<img  class="user_photo" :src="userData.headImgUrl" />
 					<div class="user_name font32 color1">{{userData.nickname}}</div>
 				</div>
 				<div class="member flexRowBetween font28 color1">
-					<div class="member_left">会员:普通会员</div>
 					<div class="member_right"><a href="index2_infor.html">完善信息</a></div>
 				</div>
 			</div>

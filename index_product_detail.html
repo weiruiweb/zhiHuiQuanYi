@@ -24,7 +24,7 @@
 <div id="app">
 	<div class="maincontent" >
 		<div class="product_banner">
-			<img src="images/banner2.jpg">
+			<img :src="mainData.bannerImg&&mainData.bannerImg[0]?mainData.bannerImg[0].url:''">
 		</div>
 		<div class="product_information w710 flex">
 			<div class="infor_cont">
