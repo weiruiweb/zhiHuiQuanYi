@@ -74,7 +74,8 @@
 							<img :src="item.mainImg[0].url" />
 						</div>
 
-						<div class="upload_btn" @change="upload" v-else>+<input  type="file" style="opacity: 0;position: absolute;left:0;top:0;z-index: 1;" accept="image/*" 
+						<div class="upload_btn" @change="upload" v-else>+
+							<input  type="file" style="opacity: 0;position: absolute;left:0;top:0;z-index: 1;" accept="image/*" 
 							 multiple v-if="isIos" :data-index="index"></input>
 						
 
